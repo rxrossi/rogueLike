@@ -26,11 +26,37 @@ const getSpaceAroundAnArray = (
 			}	
 		}	
 		const partCorrespondingToRoomSize = spacesRight.slice(startRow,endRow+1)
-		partCorrespondingToRoomSize.forEach( (el, index) => 
-			console.log("limited row:", index, "number of cols free from 0 col:", el)	
-		)
-		const minorNumber = Math.min(... partCorrespondingToRoomSize);
-		console.log("minor numer",minorNumber)
+		//partCorrespondingToRoomSize.forEach( (el, index) => 
+		//	console.log("limited row:", index, "number of cols free from 0 col:", el)	
+		//)
+		const numberOfspacesAvailableOnEveryRow = Math.min(... partCorrespondingToRoomSize);
+		//console.log("spaces available to right on every row:", numberOfspacesAvailableOnEveryRow)
+		
+		const rightStartCol = endCol+1
+		const rightEndCol   = rightStartCol+numberOfspacesAvailableOnEveryRow;
+
+		//need to calc rightStartRow, rightEndRow
+	  
+		//returnStartRow logic
+		let rightStartRow = startRow;
+		for (let row = startRow; row >= 0; row--) {
+			if (spacesRight[row] < numberOfspacesAvailableOnEveryRow) break;
+			//console.log("row being tested:", row);
+			rightStartRow = row;
+		}	
+
+		//returnEndRow logic
+		let rightEndRow = endRow;
+		for (let row = endRow; row < array.length; row++) {
+			if (spacesRight[row] < numberOfspacesAvailableOnEveryRow) break;
+			rightEndRow = row;
+		}	
+
+		console.log(
+			"startRow:", rightStartRow, "startCol:", rightStartCol,
+			"endRow:", rightEndRow, "endCol:", rightEndCol
+		);
+		
 
 
 
@@ -58,7 +84,7 @@ const getSpaceAroundAnArray = (
 
 	return {
 		left: spacesLeft,
-		right: spacesRight,
+		right: [ rightStartRow, rightStartCol, rightEndRow, rightEndCol ],
 		top: spacesTop,
 		bottom: spacesBottom
 	}
