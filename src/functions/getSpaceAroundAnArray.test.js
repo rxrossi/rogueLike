@@ -25,11 +25,11 @@ const case2 = [
   //              2,1
   //              6,1
   //              7,7
-//it('expect return.top equal startRow: 1, startCol: 2, endRow: 3, endCol: 7', () => {
-//	expect(
-//		getSpaceAroundAnArray(4,3,7,5, case2, 0).top
-//	).toEqual([1,2,3,7])
-//});
+it('expect return.top equal startRow: 1, startCol: 2, endRow: 3, endCol: 7', () => {
+	expect(
+		getSpaceAroundAnArray(4,3,7,5, case2, 0).top
+	).toEqual([1,2,3,7])
+});
 
 const case3 = [
 	[0,X,0,0,0,0,0,0],
@@ -70,16 +70,16 @@ const case4 = [
   //              6,4
   //              6,0
   //              7,2
-//it('expects case4 right to return startRow: 0, startCol: 3, endRow: 5, endCol: 5', () => {
-//	expect(
-//		getSpaceAroundAnArray(2,1,4,2, case4, 0).right
-//	).toEqual([0,3,5,5])
-//});
-//it('expects case4 bottom to return startRow: 5, startCol: 1, endrow: 6, endCol: 3', () => {
-//	expect(
-//		getSpaceAroundAnArray(2,1,4,2, case4, 0).bottom
-//	).toEqual([5,1,6,3])
-//});
+it('expects case4 right to return startRow: 0, startCol: 3, endRow: 5, endCol: 5', () => {
+	expect(
+		getSpaceAroundAnArray(2,1,4,2, case4, 0).right
+	).toEqual([0,3,5,5])
+});
+it('expects case4 bottom to return startRow: 5, startCol: 1, endrow: 6, endCol: 3', () => {
+	expect(
+		getSpaceAroundAnArray(2,1,4,2, case4, 0).bottom
+	).toEqual([5,1,6,3])
+});
 
 
 //Right case 1
