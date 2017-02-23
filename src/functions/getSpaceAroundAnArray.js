@@ -17,7 +17,7 @@ const getSpaceAroundAnArray = (
 			}
 		}
 		const leftShadow = spacesLeft.slice(startRow,endRow+1)
-		const numberOfColsOfMinorRowOfLeftShador = Math.min(... leftShadow);
+		const numberOfColsOfMinorRowOfLeftShador = Math.min(...leftShadow);
 
 		const leftStartCol = startCol - numberOfColsOfMinorRowOfLeftShador;
 		const leftEndCol   = startCol -1;
@@ -49,7 +49,7 @@ const getSpaceAroundAnArray = (
 		//partCorrespondingToRoomSize.forEach( (el, index) =>
 		//	console.log("limited row:", index, "number of cols free from 0 col:", el)
 		//)
-		const numberOfspacesAvailableOnEveryRow = Math.min(... partCorrespondingToRoomSize);
+		const numberOfspacesAvailableOnEveryRow = Math.min(...partCorrespondingToRoomSize);
 		//console.log("spaces available to right on every row:", numberOfspacesAvailableOnEveryRow)
 
 		const rightStartCol = endCol+1
@@ -87,7 +87,7 @@ const getSpaceAroundAnArray = (
 			}
 		}
 		const topShadow = spacesTop.slice(startCol, endCol+1)
-		const numberOfRowsOnMinorColOfTopShadow = Math.min(... topShadow)
+		const numberOfRowsOnMinorColOfTopShadow = Math.min(...topShadow)
 
 		let topEndRow   = startRow -1;
 		let topStartRow = startRow - numberOfRowsOnMinorColOfTopShadow;
@@ -118,7 +118,7 @@ const getSpaceAroundAnArray = (
 		//console.log("spaces bottom", spacesBottom);
 		const bottomShadow = spacesBottom.slice(startCol,endCol+1)
 		//console.log("bottomShadow", bottomShadow);
-		const numberOfRowsOnMinorColOfBottomShadow = Math.min(... bottomShadow)
+		const numberOfRowsOnMinorColOfBottomShadow = Math.min(...bottomShadow)
 
 		let bottomStartRow = endRow+1;
 		let bottomEndRow   = endRow + numberOfRowsOnMinorColOfBottomShadow;
