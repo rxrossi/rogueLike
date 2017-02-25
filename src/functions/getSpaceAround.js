@@ -1,8 +1,8 @@
 //The first four params are the object, the fifth is the array that has it, freeSpace is the value that would be considered free space on the map
 //TODO: refactor mainly right side detection
 //TODO: see if there is a way to make the code with less repetition
-const getSpaceAroundAnArray = (
-	startRow, startCol, endRow, endCol, array, freeSpace
+const getSpaceAround = (
+	{	startRow, startCol, endRow, endCol }, array, freeSpace
 ) => {
 
 	//To left
@@ -139,10 +139,31 @@ const getSpaceAroundAnArray = (
 
 
 	return {
-		left: [ leftStartRow, leftStartCol, leftEndRow, leftEndCol ],
-		right: [ rightStartRow, rightStartCol, rightEndRow, rightEndCol ],
-		top: [ topStartRow, topStartCol, topEndRow, topEndCol ],
-		bottom: [ bottomStartRow, bottomStartCol, bottomEndRow, bottomEndCol ]
+		left: {
+			startRow: leftStartRow,
+			startCol: leftStartCol,
+			endRow: leftEndRow,
+			endCol: leftEndCol 
+		},
+		right: {
+			startRow: rightStartRow,
+			startCol: rightStartCol,
+			endRow: rightEndRow,
+			endCol: rightEndCol 
+		},
+		top: 
+		{
+			startRow: topStartRow,
+			startCol: topStartCol,
+			endRow: topEndRow,
+			endCol: topEndCol 
+		},
+		bottom: {
+			startRow:	bottomStartRow, 
+			startCol: bottomStartCol,
+			endRow: bottomEndRow,
+			endCol: bottomEndCol 
+		}
 	}
 }
-export default getSpaceAroundAnArray;
+export default getSpaceAround;

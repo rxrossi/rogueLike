@@ -1,5 +1,5 @@
-const fillSpecificPartOf2dArray = (
-	startRow, startCol, endRow, endCol, array, fillWith
+const fillSpace = (
+	{ startRow, startCol, endRow, endCol }, array, fillWith
 ) => {
 	for (let row = startRow; row <= endRow; row++) {
 		for (let col = startCol; col <= endCol; col++) {
@@ -8,4 +8,4 @@ const fillSpecificPartOf2dArray = (
 	}		
 	return array;
 }	
-export default fillSpecificPartOf2dArray;
+export default fillSpace;
