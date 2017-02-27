@@ -38,7 +38,7 @@ describe("Given return of getSpaceAround, coodsOfMother, min width and height of
 
 	const minW = 5; const maxW = 10; const minH = 5; const maxH = 10;
 
-	console.log("get children when there are no available spaces anymore returns: ",
+	console.log(
 		getChildren(
 			spaceAround, room, {minW, maxW, minH, maxH}
 		)

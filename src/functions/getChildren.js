@@ -3,31 +3,50 @@ const getChildren = (
 ) => {
 	const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min +1)) + min;
 
+	let fnReturn = {};
+
+	const leftEnoughW =  (spaceAround.left.endCol - spaceAround.left.startCol) >= minW; 
+	const leftEnoughH = (spaceAround.left.endRow - spaceAround.left.startRow) >= minH; 
+
+	const rightEnoughW =  (spaceAround.right.endCol - spaceAround.right.startCol) >= minW; 
+	const rightEnoughH = (spaceAround.right.endRow - spaceAround.right.startRow) >= minH; 
+
+	const topEnoughW =  (spaceAround.top.endCol - spaceAround.top.startCol) >= minW; 
+	const topEnoughH = (spaceAround.top.endRow - spaceAround.top.startRow) >= minH; 
+
+	const bottomEnoughW =  (spaceAround.bottom.endCol - spaceAround.bottom.startCol) >= minW; 
+	const bottomEnoughH = (spaceAround.bottom.endRow - spaceAround.bottom.startRow) >= minH; 
+
 	//left
-		let left = {};
+	let left = {};
+	if (leftEnoughH && leftEnoughW) {
 		left.endCol = spaceAround.left.endCol- 1;
 
-		left.minStartCol = left.endCol - maxW;
+		left.minStartCol = (left.endCol - maxW) > spaceAround.left.startCol ? (left.endCol - maxW) : spaceAround.left.startCol;
 		left.maxStartCol = left.endCol - minW;
 		left.startCol = getRandomInt(left.minStartCol, left.maxStartCol);	
 
-		left.minStartRow = (spaceAround.left.startRow) > (room.startRow +1 - maxH) ? (spaceAround.left.startRow) : (room.startRow +1 -max); 
+		left.minStartRow = (spaceAround.left.startRow) > (room.startRow +1 - maxH) ? (spaceAround.left.startRow) : (room.startRow +1 - maxW); 
 		left.maxStartRow = (room.endRow -1) < (spaceAround.left.endRow - minH) ? (room.endRow -1) : (spaceAround.left.endRow - minH);
 		left.startRow = getRandomInt(left.minStartRow, left.maxStartRow);
 
 		left.minEndRow = (left.startRow + minH) > (room.startRow +1) ? (left.startRow + minH) : (room.startRow +1) ; 
 		left.maxEndRow = spaceAround.left.endRow < (left.startRow + maxH) ? spaceAround.left.endRow : (left.startRow + maxH); 
 		left.endRow = getRandomInt(left.minEndRow, left.maxEndRow);
-	
+
+		fnReturn.left = left;
+	}	
+
 	//right
-		let right = {};
+	let right = {};
+	if (rightEnoughH && rightEnoughW) {
 		right.startCol = spaceAround.right.startCol+1;
 		
 		right.minEndCol = right.startCol + minW;
-		right.maxEndCol = right.startCol + maxW;
+		right.maxEndCol = (right.startCol + maxW) < spaceAround.right.endCol ? (right.startCol + maxW) : spaceAround.right.endCol;
 		right.endCol = getRandomInt(right.minEndCol, right.maxEndCol)
 
-		right.minStartRow = (spaceAround.right.startRow) > (room.startRow +1 - maxH) ? (spaceAround.right.startRow) : (room.startRow +1 -max); 
+		right.minStartRow = (spaceAround.right.startRow) > (room.startRow +1 - maxH) ? (spaceAround.right.startRow) : (room.startRow +1 - maxH); 
 		right.maxStartRow = (room.endRow -1) < (spaceAround.right.endRow - minH) ? (room.endRow -1) : (spaceAround.right.endRow - minH);
 		right.startRow = getRandomInt(right.minStartRow, right.maxStartRow);
 
@@ -35,9 +54,12 @@ const getChildren = (
 		right.maxEndRow = spaceAround.right.endRow < (right.startRow + maxH) ? spaceAround.right.endRow : (right.startRow + maxH); 
 		right.endRow = getRandomInt(right.minEndRow, right.maxEndRow);
 
+		fnReturn.right = right;
+	}
 	
 	//top
-		let top = {};
+	let top = {};
+	if (topEnoughH && topEnoughW) {
 		top.endRow = spaceAround.top.endRow-1;
 
 		top.minStartRow = (top.endRow - maxH) > spaceAround.top.startRow ? (top.endRow - maxH) : spaceAround.top.startRow; 
@@ -52,12 +74,16 @@ const getChildren = (
 		top.maxEndCol =  spaceAround.top.endCol < (top.startCol + maxW) ? spaceAround.top.endCol : (top.startCol + maxW);
 		top.endCol = getRandomInt(top.minEndCol, top.maxEndCol)
 
+		fnReturn.top = top;
+	}
+
 	//bottom
-		let bottom = {};
+	let bottom = {};
+	if (bottomEnoughH && bottomEnoughW) {
 		bottom.startRow = spaceAround.bottom.startRow+1;
 
 		bottom.minEndRow = bottom.startRow + minH;
-		bottom.maxEndRow = bottom.startRow + maxH;
+		bottom.maxEndRow = (bottom.startRow + maxH) < spaceAround.bottom.endRow ? (bottom.startRow + maxH) : spaceAround.bottom.endRow;
 		bottom.endRow = getRandomInt(bottom.minEndRow, bottom.maxEndRow)
 
 		bottom.minStartCol = (spaceAround.bottom.startCol) > (room.startCol +1 - minW) ? (spaceAround.bottom.startCol) : (room.startCol +1 -minW);
@@ -68,13 +94,10 @@ const getChildren = (
 		bottom.maxEndCol =  spaceAround.bottom.endCol  < (bottom.startCol + maxW) ? spaceAround.bottom.endCol : (bottom.startCol + maxW);
 		bottom.endCol = getRandomInt(bottom.minEndCol, bottom.maxEndCol)
 
+		fnReturn.bottom = bottom;
+  }
 
-	return {
-		left,
-		right,
-		top,
-		bottom
-	}
+	return fnReturn;
 }	
 export default getChildren;
 // still need to check the max space available
