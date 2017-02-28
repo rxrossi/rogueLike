@@ -8,7 +8,7 @@ body {
 	font-size: 0;
 }
 
-.wall, .floor {
+.wall, .floor, .enemy, .item, .player {
 	display:inline-block;
 	width: 20px;
 	height: 20px;
@@ -22,4 +22,12 @@ body {
 .floor {
 	background: #333;
 	border-radius: 3px;
+}
+
+.player {
+	background: blue;
+}
+
+.enemy {
+	background: red;
 }

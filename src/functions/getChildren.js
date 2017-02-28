@@ -2,7 +2,7 @@ const getChildren = (
 	  spaceAround, room, {minW, maxW, minH, maxH} 
 ) => {
 	const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min +1)) + min;
-
+  
 	let fnReturn = {};
 
 	const leftEnoughW =  (spaceAround.left.endCol - spaceAround.left.startCol) >= minW; 
@@ -96,6 +96,48 @@ const getChildren = (
 
 		fnReturn.bottom = bottom;
   }
+
+	// need to create doors
+	// for left and right, col is fixed, simple
+	// for left and right min and max row: (left as example)
+	// 		min = room.startRow or left.startRow, whatever is greater
+	// 		max = room.endRow or left.endRow, whatever is less
+
+	if(leftEnoughH && leftEnoughW) {
+		let minRow = Math.max(room.startRow, fnReturn.left.startRow);
+		let maxRow = Math.min(room.endRow, fnReturn.left.endRow)
+
+		fnReturn.left.door = {}
+		fnReturn.left.door.row = getRandomInt(minRow, maxRow)
+		fnReturn.left.door.col = room.startCol -1;		
+	}
+
+	if(rightEnoughH && rightEnoughW) {
+		let minRow = Math.max(room.startRow, fnReturn.right.startRow);
+		let maxRow = Math.min(room.endRow, fnReturn.right.endRow)
+
+		fnReturn.right.door = {}
+		fnReturn.right.door.row = getRandomInt(minRow, maxRow)
+		fnReturn.right.door.col = room.endCol +1;		
+	}
+
+	if(topEnoughH && topEnoughW) {
+		let minCol = Math.max(room.startCol, fnReturn.top.startCol);
+		let maxCol = Math.min(room.endCol, fnReturn.top.endCol)
+
+		fnReturn.top.door = {}
+		fnReturn.top.door.col = getRandomInt(minCol, maxCol)
+		fnReturn.top.door.row = room.startRow -1;		
+	}
+
+	if(bottomEnoughH && bottomEnoughW) {
+		let minCol = Math.max(room.startCol, fnReturn.bottom.startCol);
+		let maxCol = Math.min(room.endCol, fnReturn.bottom.endCol)
+
+		fnReturn.bottom.door = {}
+		fnReturn.bottom.door.col = getRandomInt(minCol, maxCol)
+		fnReturn.bottom.door.row = room.endRow +1;		
+	}
 
 	return fnReturn;
 }	
