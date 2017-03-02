@@ -130,7 +130,6 @@ const player = {
 const enemies = [
   {id: 0, row: 1, col: 2, hp: 100, attack: 25},
   {id: 1, row: 7, col: 5, hp: 100, attack: 25},
-  
 ]
 
 const items = [
@@ -147,11 +146,11 @@ const initialState = {
 
 class MapComponent extends React.Component {
 
- componentWillReceiveProps() {
+componentWillReceiveProps() {
   map[this.props.player.row][this.props.player.col] = "floor";  
   enemies.forEach( enemy => map[enemy.row][enemy.col] = "floor")
   items.forEach( item => map[item.row][item.col] = "floor")
- }
+}
 
 componentDidMount() {
   window.addEventListener("keydown", (e) => {
@@ -245,7 +244,6 @@ playerMove(input) {
 				console.log("Something blocking the way, unkown entity type: ",this.checkDestination(destination, map));
 				break;  
 		}
-
 }
 
 
@@ -281,9 +279,9 @@ render() {
       }
     </div>
   )
- }
- 
 }
+ 
+} //MapComponent
 const mapMapComponentStateToProps = (state) => ({
   map: state.map,
   player: state.player,
@@ -292,8 +290,6 @@ const mapMapComponentStateToProps = (state) => ({
 })
 
 MapComponent = connect(mapMapComponentStateToProps)(MapComponent)
-
-// const checkDestination = 
 
 //reducers
 const gameReducer = (state = {}, action) => {

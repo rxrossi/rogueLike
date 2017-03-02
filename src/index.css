@@ -10,8 +10,8 @@ body {
 
 .wall, .floor, .enemy, .item, .player {
 	display:inline-block;
-	width: 20px;
-	height: 20px;
+	width: 10px;
+	height: 10px;
 }
 
 .wall {
@@ -21,7 +21,7 @@ body {
 
 .floor {
 	background: #333;
-	border-radius: 3px;
+	border-radius: 1px;
 }
 
 .player {
