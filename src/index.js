@@ -11,12 +11,12 @@ import getSpaceAround from './functions/getSpaceAround.js';
 import getChildren from './functions/getChildren.js';
 const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
-//TODO: implement a counter with succesful rooms created, if less than something, redo 
+//TODO: implement a counter with succesful rooms created, if less than something, redo
 //TODO: sometimes the right rooms goes one col over the spave
 //TODO: position items and player in a random way
 //			- write a function for checking free spaces
 //			- each item or enermy must be positioned after the player
-//			- randomFreeSpace calcs on the map, it is possible that two items receive the same 
+//			- randomFreeSpace calcs on the map, it is possible that two items receive the same
 //			position if randomFreeSpace is called without positioning the previous thing on the map
 //TODO: player old position, used items and killed enemy are being removed on render, not really on map
 //
@@ -91,63 +91,78 @@ while (i > 0) {
 	const spaceAround = getSpaceAround({...mother}, map, "wall")
 
 	const children = getChildren(spaceAround, mother, {...roomSize});
-		
+
 	const sidesAvailable = Object.keys(children);
 	if (sidesAvailable.length > 0) {
-		const sideToDrawChild = sidesAvailable[getRandomInt(0, sidesAvailable.length-1)];	
+		const sideToDrawChild = sidesAvailable[getRandomInt(0, sidesAvailable.length-1)];
 		map = fillSpace({...children[sideToDrawChild]}, map, "floor");
 		const doorRow = children[sideToDrawChild].door.row;
 		const doorCol = children[sideToDrawChild].door.col;
-	
+
 		map[doorRow][doorCol] = "floor";
 		motherRooms.push(children[sideToDrawChild]);
-	}	
+	}
 	motherRooms.shift();
 	i -= 1;
 }
 // Non map stuff
 
-const randomFreeSpace = (map) => {
+const getFreeSpace = (map) => {
 	let freeSpaces = [];
 	for (let row = 0; row < map.length ; row++) {
 		for (let col = 0; col < map[row].length; col++) {
 			if (map[row][col] === "floor") freeSpaces.push([row, col])
 		}
 	}
-	const index = getRandomInt(0, freeSpaces.length);
-	return {
-		row: freeSpaces[index][0],
-		col: freeSpaces[index][1]
+	return freeSpaces;
+}
+
+const freeSpaceHandler = {
+	freeSpace: getFreeSpace(map),
+
+	get: () => {
+		const index = getRandomInt(0, freeSpaceHandler.freeSpace.length);
+
+		const toReturn = {
+			row: freeSpaceHandler.freeSpace[index][0],
+			col: freeSpaceHandler.freeSpace[index][1]
+		}
+		freeSpaceHandler.freeSpace = [
+			...freeSpaceHandler.freeSpace.slice(0, index),
+			...freeSpaceHandler.freeSpace.slice(index+1)
+		]
+		return toReturn;
 	}
-}	
+
+}
 
 const player = {
-	...randomFreeSpace(map),
+	...freeSpaceHandler.get(),
   hp: 1000,
   attack: 25
 }
 
 const enemies = [
-  {id: 0, row: 1, col: 2, hp: 100, attack: 25},
-  {id: 1, row: 7, col: 5, hp: 100, attack: 25},
+  {id: 0, ...freeSpaceHandler.get(), hp: 100, attack: 25},
+  {id: 1, ...freeSpaceHandler.get(), hp: 100, attack: 25},
 ]
 
 const items = [
-  {id: 0, type:'health', row: 5, col: 7, value: 100, onMap: true },
-  {id: 1, type:'weapon', row: 8, col: 3, onMap: true, name:'shoes', attack: 50 }
+  {id: 0, type:'health', ...freeSpaceHandler.get(), value: 100, onMap: true },
+  {id: 1, type:'weapon', ...freeSpaceHandler.get(), onMap: true, name:'shoes', attack: 50 }
 ]
 
 const initialState = {
 	map,
-  player, 
-  enemies: [],
-  items: [],
+  player,
+  enemies,
+  items
 }
 
 class MapComponent extends React.Component {
 
 componentWillReceiveProps() {
-  map[this.props.player.row][this.props.player.col] = "floor";  
+  map[this.props.player.row][this.props.player.col] = "floor";
   enemies.forEach( enemy => map[enemy.row][enemy.col] = "floor")
   items.forEach( item => map[item.row][item.col] = "floor")
 }
@@ -158,17 +173,17 @@ componentDidMount() {
     switch (e.keyCode) {
       case 37:
         this.playerMove("LEFT")
-        break;  
+        break;
       case 38:
         this.playerMove("TOP")
-        break;   
+        break;
       case 39:
         this.playerMove("RIGHT")
-        break;      
+        break;
       case 40:
         this.playerMove("BOTTOM")
-        break;        
-    
+        break;
+
       default:
         break;
     }
@@ -176,20 +191,20 @@ componentDidMount() {
 }
 
 playerMove(input) {
-  const { map, enemies, player } = this.props; 
+  const { map, enemies, player } = this.props;
 
   this.calcDestination = (player, input) => {
     switch (input) {
       case 'LEFT':
         return {col:player.col -1,   row: player.row};
       case 'TOP':
-        return {col:player.col,      row: player.row-1}; 
+        return {col:player.col,      row: player.row-1};
       case 'RIGHT':
-        return {col:player.col +1,   row: player.row};  
+        return {col:player.col +1,   row: player.row};
       case 'BOTTOM':
-        return {col:player.col,      row: player.row+1};  
+        return {col:player.col,      row: player.row+1};
       default:
-        return {col:player.col, row: player.row}  
+        return {col:player.col, row: player.row}
     }
   }
   const destination = this.calcDestination(this.props.player, input);
@@ -217,8 +232,8 @@ playerMove(input) {
         return {updatedItem: item, updatedPlayerHp: playerHp }
       case 'weapon':
         const playerAttack = item.attack;
-        item.onMap = false; 
-        return {updatedItem: item, updatedPlayerAttack: playerAttack }       
+        item.onMap = false;
+        return {updatedItem: item, updatedPlayerAttack: playerAttack }
     }
   }
 
@@ -227,43 +242,43 @@ playerMove(input) {
 		switch(whatIsOnDestination[0]){
 			case 'floor':
 					store.dispatch(movePlayer(destination));
-				break;  
-			case 'enemy':   
+				break;
+			case 'enemy':
 					const dataOfFight = this.calcFightResult(whatIsOnDestination[1]);
 					store.dispatch(
 						fight(dataOfFight)
 					)
 				break;
 			case 'health':
-				player.hp < 1000 ? 
+				player.hp < 1000 ?
 				store.dispatch(
 						gainLifeFromItem(this.interactWithItem(whatIsOnDestination[1]))
-					) 
-				: store.dispatch(movePlayer(destination));  
+					)
+				: store.dispatch(movePlayer(destination));
 			default:
 				console.log("Something blocking the way, unkown entity type: ",this.checkDestination(destination, map));
-				break;  
+				break;
 		}
 }
 
 
 render() {
-  const { player, map } = this.props; 
+  const { player, map } = this.props;
   const { enemies, items } = this.props;
 
 
   enemies.forEach( enemy => enemy.hp > 0 ? map[enemy.row][enemy.col] = "enemy "+enemy.id : '' );
   items.forEach( item => item.onMap ? map[item.row][item.col] = item.type+" "+item.id : '');
-  
+
   map[player.row][player.col] = "player";
   return (
-    <div> 
+    <div>
       <div> Player row: {player.row}, Player col: {player.col} </div>
-      <div> Player HP: {player.hp}</div> 
+      <div> Player HP: {player.hp}</div>
       {
         map.map( (row, rowKey) => {
           return (
-            <div key={rowKey} className="row"> 
+            <div key={rowKey} className="row">
               {
                 row.map( (cell, cellKey) => {
                   return (
@@ -280,7 +295,7 @@ render() {
     </div>
   )
 }
- 
+
 } //MapComponent
 const mapMapComponentStateToProps = (state) => ({
   map: state.map,
@@ -306,19 +321,19 @@ const gameReducer = (state = {}, action) => {
       return {
         ...state,
         player: {...state.player, hp: action.playerHp},
-        enemies: [...state.enemies.slice(0, enemyIndex), 
-                  action.enemy, 
+        enemies: [...state.enemies.slice(0, enemyIndex),
+                  action.enemy,
                   ...state.enemies.slice(enemyIndex+1)]
-        
+
       }
     case 'GAINED_LIFE_FROM_ITEM':
       console.log("interacting with item", action)
-      const itemIndex = state.enemies.findIndex(item => item.id == action.item.id);    
-       
-      const updatedPlayer = {...state.player, 
+      const itemIndex = state.enemies.findIndex(item => item.id == action.item.id);
+
+      const updatedPlayer = {...state.player,
         hp: action.playerHp,
         row: action.item.row, col: action.item.col};
-      
+
       return {
         ...state,
         player: updatedPlayer,
@@ -327,9 +342,9 @@ const gameReducer = (state = {}, action) => {
           action.item,
           ...state.items.slice(itemIndex)
         ]
-      }  
+      }
     default:
-      return state;  
+      return state;
   }
 }
 

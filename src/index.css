@@ -8,7 +8,7 @@ body {
 	font-size: 0;
 }
 
-.wall, .floor, .enemy, .item, .player {
+.wall, .floor, .enemy, .item, .player, .health, .weapon {
 	display:inline-block;
 	width: 10px;
 	height: 10px;
@@ -30,4 +30,11 @@ body {
 
 .enemy {
 	background: red;
+}
+
+.health {
+	background: green;
+}
+.weapon {
+	background: yellow;
 }
