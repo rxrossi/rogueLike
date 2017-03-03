@@ -1,0 +1,2 @@
+body{margin:0;padding:0;font-family:sans-serif}.row{font-size:0}.enemy,.floor,.health,.item,.player,.wall,.weapon{display:inline-block;width:10px;height:10px}.wall{background:#111}.floor,.wall{border-radius:1px}.floor{background:#333}.player{background:blue}.enemy{background:red}.health{background:green}.weapon{background:#ff0}
+/*# sourceMappingURL=main.caecfeb2.css.map*/
