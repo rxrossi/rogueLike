@@ -4,6 +4,10 @@ import { createStore } from 'redux';
 import ReactDOM from 'react-dom';
 import './index.css';
 
+//TODO: implement a counter with succesful rooms created, if less than something, redo
+//TODO: sometimes the right rooms goes one col over the space
+//TODO: perfom cleanup on index.js moving things to their files
+
 //import functions
 import make2dArray from './functions/make2dArray.js';
 import fillSpace from './functions/fillSpace.js';
@@ -11,51 +15,8 @@ import getSpaceAround from './functions/getSpaceAround.js';
 import getChildren from './functions/getChildren.js';
 const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
-//TODO: implement a counter with succesful rooms created, if less than something, redo
-//TODO: sometimes the right rooms goes one col over the spave
-//TODO: position items and player in a random way
-//			- write a function for checking free spaces
-//			- each item or enermy must be positioned after the player
-//			- randomFreeSpace calcs on the map, it is possible that two items receive the same
-//			position if randomFreeSpace is called without positioning the previous thing on the map
-//TODO: player old position, used items and killed enemy are being removed on render, not really on map
-//
-//There are two things that I can do, one is to map be a string like "floor player", but it does not need to be floor, if something is not a "enemy" or "item" it was a "floor"
-//putting player on map will make it harder to control the player, each time it will need to find in a two 2d array the player position or not if I also store it on the player, this would create  redundancy of data
-//
-//A good idea might be that every item is postioned on the map and does not have its own position, but player do, as items does not move, this might make sense
-//it is better to let things the way they are with the render, they make sense
-//to avoid duplication I need to split randomSpace into something like readFreeSpaces and store it on the array, them another function that would return {row, col} and remove it from from freeSpaces array
-//it could be interesting to add used positions to another array
-//Action creators
-  const movePlayer = (destination) => ({
-    type: 'MOVE_PLAYER',
-    destination
-  })
-
-  const fight = (dataOfFight) => ({
-    type: 'FIGHT',
-    enemy: dataOfFight.updatedEnemy,
-    playerHp: dataOfFight.updatedPlayerHp
-  })
-
-  const gainLifeFromItem = (dataOfInteraction) => ({
-    type: 'GAINED_LIFE_FROM_ITEM',
-    item: dataOfInteraction.updatedItem,
-    playerHp: dataOfInteraction.updatedPlayerHp
-  })
-
-  const takeWeaponFromGround = (dataOfInteraction) => ({
-    type: 'TAKE_WEAPON_FROM_GROUND',
-    item: dataOfInteraction.item,
-    playerAttack: dataOfInteraction.playerAttack
-  })
-
-  const removeEntity = (entity) => ({
-    type: 'REMOVE_ENTITY',
-    row: entity.row,
-    col: entity.col
-  })
+//import components
+import MapComponent from './components/Map.js'
 
 // Map related stuff
 const mapW = 50;
@@ -133,7 +94,6 @@ const freeSpaceHandler = {
 		]
 		return toReturn;
 	}
-
 }
 
 const player = {
@@ -159,153 +119,6 @@ const initialState = {
   items
 }
 
-class MapComponent extends React.Component {
-
-componentWillReceiveProps() {
-  map[this.props.player.row][this.props.player.col] = "floor";
-  enemies.forEach( enemy => map[enemy.row][enemy.col] = "floor")
-  items.forEach( item => map[item.row][item.col] = "floor")
-}
-
-componentDidMount() {
-  window.addEventListener("keydown", (e) => {
-    // console.log(e.keyCode);
-    switch (e.keyCode) {
-      case 37:
-        this.playerMove("LEFT")
-        break;
-      case 38:
-        this.playerMove("TOP")
-        break;
-      case 39:
-        this.playerMove("RIGHT")
-        break;
-      case 40:
-        this.playerMove("BOTTOM")
-        break;
-
-      default:
-        break;
-    }
-  })
-}
-
-playerMove(input) {
-  const { map, enemies, player } = this.props;
-
-  this.calcDestination = (player, input) => {
-    switch (input) {
-      case 'LEFT':
-        return {col:player.col -1,   row: player.row};
-      case 'TOP':
-        return {col:player.col,      row: player.row-1};
-      case 'RIGHT':
-        return {col:player.col +1,   row: player.row};
-      case 'BOTTOM':
-        return {col:player.col,      row: player.row+1};
-      default:
-        return {col:player.col, row: player.row}
-    }
-  }
-  const destination = this.calcDestination(this.props.player, input);
-
-  this.checkDestination = (destination, map) => {
-    return map[destination.row][destination.col];
-  }
-
-  this.calcFightResult = (enemyId) => {
-    // console.log(enemyId);
-    let enemy = enemies.find(enemy => enemy.id == enemyId);
-    // console.log(enemy);
-    enemy.hp = enemy.hp - player.attack;
-    const playerHp = player.hp - enemy.attack;
-    return {updatedEnemy: enemy, updatedPlayerHp: playerHp}
-  }
-
-  this.interactWithItem = (itemId) => {
-    let item = items.find(item => item.id == itemId);
-
-    switch (item.type) {
-      case 'health':
-        const playerHp = player.hp + item.value;
-        item.onMap = false;
-        return {updatedItem: item, updatedPlayerHp: playerHp }
-      case 'weapon':
-        const playerAttack = item.attack;
-        item.onMap = false;
-        return {updatedItem: item, updatedPlayerAttack: playerAttack }
-    }
-  }
-
-
-  const whatIsOnDestination = this.checkDestination(destination, map).split(" ")
-		switch(whatIsOnDestination[0]){
-			case 'floor':
-					store.dispatch(movePlayer(destination));
-				break;
-			case 'enemy':
-					const dataOfFight = this.calcFightResult(whatIsOnDestination[1]);
-					store.dispatch(
-						fight(dataOfFight)
-					)
-				break;
-			case 'health':
-				player.hp < 1000 ?
-				store.dispatch(
-						gainLifeFromItem(this.interactWithItem(whatIsOnDestination[1]))
-					)
-				: store.dispatch(movePlayer(destination));
-			default:
-				console.log("Something blocking the way, unkown entity type: ",this.checkDestination(destination, map));
-				break;
-		}
-}
-
-
-render() {
-  const { player, map } = this.props;
-  const { enemies, items } = this.props;
-
-
-  enemies.forEach( enemy => enemy.hp > 0 ? map[enemy.row][enemy.col] = "enemy "+enemy.id : '' );
-  items.forEach( item => item.onMap ? map[item.row][item.col] = item.type+" "+item.id : '');
-
-  map[player.row][player.col] = "player";
-  return (
-    <div>
-      <div> Player row: {player.row}, Player col: {player.col} </div>
-      <div> Player HP: {player.hp}</div>
-      {
-        map.map( (row, rowKey) => {
-          return (
-            <div key={rowKey} className="row">
-              {
-                row.map( (cell, cellKey) => {
-                  return (
-                    <div className={cell} key={rowKey+''+cellKey}>
-                      {rowKey} {cellKey}
-                    </div>
-                  )
-                })
-              }
-            </div>
-          )
-        })
-      }
-    </div>
-  )
-}
-
-} //MapComponent
-const mapMapComponentStateToProps = (state) => ({
-  map: state.map,
-  player: state.player,
-  enemies: state.enemies,
-  items: state.items
-})
-
-MapComponent = connect(mapMapComponentStateToProps)(MapComponent)
-
 //reducers
 const gameReducer = (state = {}, action) => {
   switch(action.type) {
@@ -316,7 +129,7 @@ const gameReducer = (state = {}, action) => {
       }
     case 'FIGHT':
       // console.log(action)
-      const enemyIndex = state.enemies.findIndex(enemy => enemy.id == action.enemy.id);
+      const enemyIndex = state.enemies.findIndex(enemy => enemy.id === Number(action.enemy.id));
       // console.log(enemyIndex);
       return {
         ...state,
@@ -328,7 +141,7 @@ const gameReducer = (state = {}, action) => {
       }
     case 'GAINED_LIFE_FROM_ITEM':
       console.log("interacting with item", action)
-      const itemIndex = state.enemies.findIndex(item => item.id == action.item.id);
+      const itemIndex = state.enemies.findIndex(item => item.id === Number(action.item.id));
 
       const updatedPlayer = {...state.player,
         hp: action.playerHp,
