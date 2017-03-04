@@ -9,9 +9,11 @@ import './index.css';
 //TODO: perfom cleanup on index.js moving things to their files
 //			- need to automate etities generation (items, enemies and healh)
 //			-- it will be necessary to already implement level calculation (map level)
+//TODO: the map component playerMove can be improve a lot
+//			- it is possible that checkDestination can be convertead to a IIFE
 
 //import functions
-import mapGenerator from './functions/mapGeneration' 
+import mapGenerator from './functions/mapGeneration'
 import freePositionsClass from './functions/freePositionsClass'
 
 //import reducers

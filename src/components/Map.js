@@ -38,7 +38,9 @@ class MapComponent extends React.Component {
 		const { map, enemies, player, items } = this.props;
 		const { movePlayer, fight, gainLifeFromItem } = this.props;
 
-		this.calcDestination = (player, input) => {
+		let destination = {};
+
+		destination.coords= (function(player, input) {
 			switch (input) {
 				case 'LEFT':
 					return {col:player.col -1,   row: player.row};
@@ -51,24 +53,19 @@ class MapComponent extends React.Component {
 				default:
 					return {col:player.col, row: player.row}
 			}
-		}
+		})(player, input);
 
-		this.checkDestination = (destination, map) => {
-			return map[destination.row][destination.col];
-		}
+    destination.type = map[destination.coords.row][destination.coords.col].split(" ")[0]
+    destination.entityId = map[destination.coords.row][destination.coords.col].split(" ")[1]
 
-		const destination = this.calcDestination(this.props.player, input);
-
-		this.calcFightResult = (enemyId) => {
-			// console.log(enemyId);
+		function interatWithEnemy(enemyId) {
 			let enemy = enemies.find(enemy => enemy.id === Number(enemyId));
-			// console.log(enemy);
 			enemy.hp -= player.attack;
 			const playerHp = player.hp - enemy.attack;
 			return {updatedEnemy: enemy, updatedPlayerHp: playerHp}
 		}
 
-		this.interactWithItem = (itemId) => {
+		function interactWithItem(itemId) {
 			let item = items.find(item => item.id === Number(itemId));
 
 			switch (item.type) {
@@ -86,23 +83,23 @@ class MapComponent extends React.Component {
 			}
 		}
 
-		const whatIsOnDestination = this.checkDestination(destination, map).split(" ")
-
-		switch(whatIsOnDestination[0]){
+		switch(destination.type){
 			case 'floor':
-					movePlayer(destination);
+					movePlayer(destination.coords);
 				break;
 			case 'enemy':
-					const dataOfFight = this.calcFightResult(whatIsOnDestination[1]);
+					const dataOfFight = interatWithEnemy(destination.entityId);
 					fight(dataOfFight)
 				break;
 			case 'health':
-				player.hp < 1000
-				?	gainLifeFromItem(this.interactWithItem(whatIsOnDestination[1]))
-				: movePlayer(destination);
+				player.hp < 1000 //TODO: if the user life is 975, takink a pot will increase life above 1000
+				?	gainLifeFromItem(interactWithItem(destination.entityId))
+				: movePlayer(destination.coords);
+				break;
+			case 'wall':
 				break;
 			default:
-				console.log("Something blocking the way, unkown entity type: ",this.checkDestination(destination, map));
+				console.log("Something blocking the way, unkown entity type: ", destination.type, destination.entityID);
 				break;
 		}
 	}
