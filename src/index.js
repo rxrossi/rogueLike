@@ -6,9 +6,7 @@ import './index.css';
 
 //TODO: implement a counter with succesful rooms created, if less than something, redo
 //TODO: sometimes the right rooms goes one col over the space
-//TODO: avoid life going higher than player.maxHp by using health items
 //TODO: add the level up things
-//			- add expToLvlUp and maxHp to player
 // 		  - do the lvl up when certain exp is achieved, change maxHp, set current hp to maxHp, change expToLvlUp, change base_dmg and attack ( save the weapon dmg by doing attack - base_dmg)
 //import functions
 import mapGenerator from './functions/mapGeneration'
@@ -33,12 +31,14 @@ import MapComponent from './components/Map.js'
 	}
 
 	const player = {
+		maxHp: 1000,
 		hp: 1000,
 		base_dmg: 25,
 		attack: 25,
 		weapon: 'none',
 		lvl: 1,
 		exp: 0,
+		maxExp: 100,
 	}
 
 function setupLevel(level, player) {

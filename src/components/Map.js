@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { movePlayer, fight, gainLifeFromItem, equipWeapon, gainExp } from '../actions';
+import { movePlayer, fight, gainLifeFromItem, equipWeapon, gainExp, gainLvl } from '../actions';
 
 class MapComponent extends React.Component {
 
@@ -36,7 +36,7 @@ class MapComponent extends React.Component {
 
 	playerMove(input) {
 		const { map, enemies, player, items } = this.props;
-		const { movePlayer, fight, gainLifeFromItem, equipWeapon, gainExp } = this.props;
+		const { movePlayer, fight, gainLifeFromItem, equipWeapon, gainExp, gainLvl } = this.props;
 
 		let destination = {};
 
@@ -61,8 +61,9 @@ class MapComponent extends React.Component {
 		function interatWithEnemy(enemyId) {
 			let enemy = enemies.find(enemy => enemy.id === Number(enemyId));
 			let updatedEnemyHp = enemy.hp - player.attack;
-			const playerHp = player.hp - enemy.attack;
-			return {updatedEnemy: {...enemy, hp: updatedEnemyHp}, updatedPlayerHp: playerHp}
+			//const playerHp = player.hp - enemy.attack;
+			const updatedPlayer = {...player, hp: player.hp - enemy.attack }
+			return {updatedEnemy: {...enemy, hp: updatedEnemyHp}, updatedPlayer}
 		}
 
 		function interactWithItem(itemId) {
@@ -70,7 +71,7 @@ class MapComponent extends React.Component {
 
 			switch (item.type) {
 				case 'health':
-					const playerHp = player.hp + item.value;
+					const playerHp = Math.min(player.hp + item.value, player.maxHp)
 					item.onMap = false;
 					return {updatedItem: item, updatedPlayerHp: playerHp }
 				case 'weapon':
@@ -91,10 +92,15 @@ class MapComponent extends React.Component {
 					const dataOfFight = interatWithEnemy(destination.entityId);
 					// console.log("enemy hp: ", dataOfFight.updatedEnemy.hp, "exp: ", dataOfFight.updatedEnemy.exp);
 					fight(dataOfFight)
-					if (dataOfFight.updatedEnemy.hp <= 0 ) gainExp(dataOfFight.updatedEnemy.exp) 
+					if (dataOfFight.updatedEnemy.hp <= 0 ) {
+						gainExp(dataOfFight.updatedEnemy.exp)
+						if (player.exp + dataOfFight.updatedEnemy.exp >= player.maxExp) {
+							gainLvl();
+						}
+					}
 				break;
 			case 'health':
-				player.hp < 1000 //TODO: if the user life is 975, takink a pot will increase life above 1000
+				player.hp < player.maxHp
 				?	gainLifeFromItem(interactWithItem(destination.entityId))
 				: movePlayer(destination.coords);
 				break;
@@ -121,11 +127,11 @@ class MapComponent extends React.Component {
 		return (
 			<div>
 				<div> Player row: {player.row}, Player col: {player.col} </div>
-				<div> Player HP: {player.hp}</div>
+				<div> Player HP: {player.hp}/{player.maxHp}</div>
 				<div> Weapon: {player.weapon} </div>
 				<div> Attack: {player.attack} </div>
 				<div> lvl: {player.lvl} </div>
-				<div> exp: {player.exp} </div>
+				<div> exp: {player.exp}/{player.maxExp} </div>
 				{
 					map.map( (row, rowKey) => {
 						return (
@@ -159,8 +165,9 @@ const mapDispatchToProps = (dispatch) => ({
 	fight: (dataOfFight) => dispatch(fight(dataOfFight)),
 	gainLifeFromItem: (item) => dispatch(gainLifeFromItem(item)),
 	equipWeapon: (data) => dispatch(equipWeapon(data)),
-	gainExp: (data) => dispatch(gainExp(data))
-}) 
+	gainExp: (data) => dispatch(gainExp(data)),
+	gainLvl: () => gainLvl()
+})
 
 MapComponent = connect(mapStateToProps, mapDispatchToProps)(MapComponent)
 

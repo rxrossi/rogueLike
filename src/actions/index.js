@@ -6,7 +6,7 @@ export const movePlayer = (destination) => ({
 export const fight = (dataOfFight) => ({
 	type: 'FIGHT',
 	enemy: dataOfFight.updatedEnemy,
-	playerHp: dataOfFight.updatedPlayerHp
+	updatedPlayer: dataOfFight.updatedPlayer
 })
 
 export const gainLifeFromItem = (dataOfInteraction) => ({
@@ -24,6 +24,10 @@ export const equipWeapon = (dataOfInteraction) => ({
 export const gainExp = (exp) => ({
 	type: 'GAIN_EXP',
 	exp
+})
+
+export const gainLvl = (data) => ({
+	type: 'GAIN_LVL',
 })
 
 //const removeEntity = (entity) => ({
