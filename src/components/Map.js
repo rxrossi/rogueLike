@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { movePlayer, fight, gainLifeFromItem } from '../actions';
+import { movePlayer, fight, gainLifeFromItem, equipWeapon } from '../actions';
 
 class MapComponent extends React.Component {
 
@@ -66,7 +66,7 @@ class MapComponent extends React.Component {
 		}
 
 		function interactWithItem(itemId) {
-			let item = items.find(item => item.id === Number(itemId));
+			let item = items.find(item => item.id === itemId);
 
 			switch (item.type) {
 				case 'health':
@@ -74,7 +74,7 @@ class MapComponent extends React.Component {
 					item.onMap = false;
 					return {updatedItem: item, updatedPlayerHp: playerHp }
 				case 'weapon':
-					const playerAttack = item.attack;
+					const playerAttack = player.base_dmg + item.attack;
 					item.onMap = false;
 					return {updatedItem: item, updatedPlayerAttack: playerAttack }
 				default:
@@ -96,10 +96,13 @@ class MapComponent extends React.Component {
 				?	gainLifeFromItem(interactWithItem(destination.entityId))
 				: movePlayer(destination.coords);
 				break;
+			case 'weapon':
+				equipWeapon(interactWithItem(destination.entityId))
+				break;
 			case 'wall':
 				break;
 			default:
-				console.log("Something blocking the way, unkown entity type: ", destination.type, destination.entityID);
+				console.log("Something blocking the way, unkown entity type: ", destination.type, destination.entityId);
 				break;
 		}
 	}
@@ -148,7 +151,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
 	movePlayer: (destination) => dispatch(movePlayer(destination)),
 	fight: (dataOfFight) => dispatch(fight(dataOfFight)),
-	gainLifeFromItem: (item) => dispatch(gainLifeFromItem(item))
+	gainLifeFromItem: (item) => dispatch(gainLifeFromItem(item)),
+	equipWeapon: (data) => dispatch(equipWeapon(data))
 }) //
 
 MapComponent = connect(mapStateToProps, mapDispatchToProps)(MapComponent)

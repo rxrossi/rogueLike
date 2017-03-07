@@ -34,32 +34,85 @@ import MapComponent from './components/Map.js'
 		maxH: 8,
 	}
 
-	let map = mapGenerator({mapW, mapH}, roomSize)
-
-// Entities creation and positioning
-	const freeSpaceHandler = new freePositionsClass(map);
-
 	const player = {
-		...freeSpaceHandler.get(),
 		hp: 1000,
 		attack: 25
 	}
 
-	const enemies = [
-		{id: 0, ...freeSpaceHandler.get(), hp: 100, attack: 25},
-		{id: 1, ...freeSpaceHandler.get(), hp: 100, attack: 25},
+function setupLevel(level, player) {
+	// player stats based on level
+	// 1 - hp: 1000, attack: 25
+	// 2 - hp: 2000, attack: 50
+	// 3 = hp: 3000, attack: 75
+
+	let map = mapGenerator({mapW, mapH}, roomSize)
+
+	const freeSpaceHandler = new freePositionsClass(map);
+
+	function enemiesCreatorAndPositioner(
+		level, freeSpaceHandler, qty, base_hp, base_attack, base_exp
+		) {
+
+		let hp = base_hp * (level + 1);
+		let attack = base_attack * (level +1);
+		let enemies = [];
+		qty += level;
+		let exp = base_exp * (level + 1);
+		for (let i = 0; i < qty; i++) {
+			enemies.push(
+				{id: i, ...freeSpaceHandler.get(), hp, attack, exp}
+			)
+		}
+		return enemies;
+	}
+
+	//total damage of enemy === health / player attack * enemy attack
+	// lvl 1 - 200 / 25(unarmed) * 100 = 800 or 300 if player armed
+	// lvl 2 - 400 / 50 or 110 * 200 = 1000 if lvl2 + broom, or 500 if with wp2
+	// lvl 3 - 600 / 75 or 195 * 300 = 2400 or 900
+	// lvl 4 - 800 / 100 or 300 * 400 = 3200 or 1200 with weapon
+
+
+	function healthCreatorAndPositioner(level, freeSpaceHandler, qty, base_hp, onMap = true) {
+		let healths = [];
+		let hp = base_hp * (level+1)
+		qty += level;
+		for (let i = 0; i < qty; i++) {
+			healths.push(
+				{id: 'health' + i, type:'health', value: hp, onMap, ...freeSpaceHandler.get()}
+			)
+		}
+		return healths;
+	}
+
+	const weapons = [
+		{id:'wp1', type:'weapon', onMap: true, name:'Broom', atack: 30, ...freeSpaceHandler.get()},
+		{id:'wp2', type:'weapon', onMap: true, name:'Broom with sharp knife', atack: 60,  ...freeSpaceHandler.get()},
+		{id:'wp3', type:'weapon', onMap: true, name:'Sword', atack: 100, ...freeSpaceHandler.get()},
+		{id:'wp3', type:'weapon', onMap: true, name:'Fire sword', atack: 150, ...freeSpaceHandler.get()},
+	];
+
+	const enemies = enemiesCreatorAndPositioner(level, freeSpaceHandler, 5, 200, 70);
+	const items = [
+		...healthCreatorAndPositioner(level, freeSpaceHandler, 3, 200),
+		weapons[level]
 	]
 
-	const items = [
-		{id: 0, type:'health', ...freeSpaceHandler.get(), value: 100, onMap: true },
-		{id: 1, type:'weapon', ...freeSpaceHandler.get(), onMap: true, name:'shoes', attack: 50 }
-	]
+	player = {
+		...player,
+		...freeSpaceHandler.get()
+	}
+
+	return {
+		map,
+		enemies,
+		items,
+		player
+	}
+}
 
 	const initialState = {
-		map,
-		player,
-		enemies,
-		items
+		...setupLevel(0, player),
 	}
 
 //store

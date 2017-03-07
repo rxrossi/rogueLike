@@ -18,8 +18,7 @@ const gameReducer = (state = {}, action) => {
 
       }
     case 'GAINED_LIFE_FROM_ITEM':
-      console.log("interacting with item", action)
-      const itemIndex = state.enemies.findIndex(item => item.id === Number(action.item.id));
+      const itemIndex = state.items.findIndex(item => item.id === Number(action.item.id));
 
       const updatedPlayer = {...state.player,
         hp: action.playerHp,

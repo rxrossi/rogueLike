@@ -15,11 +15,11 @@ export const gainLifeFromItem = (dataOfInteraction) => ({
 	playerHp: dataOfInteraction.updatedPlayerHp
 })
 
-//const takeWeaponFromGround = (dataOfInteraction) => ({
-	//type: 'TAKE_WEAPON_FROM_GROUND',
-	//item: dataOfInteraction.item,
-	//playerAttack: dataOfInteraction.playerAttack
-//})
+const equipWeapon = (dataOfInteraction) => ({
+	type: 'EQUIP_WEAPON',
+	item: dataOfInteraction.item,
+	playerAttack: dataOfInteraction.playerAttack
+})
 
 //const removeEntity = (entity) => ({
 	//type: 'REMOVE_ENTITY',
