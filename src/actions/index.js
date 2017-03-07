@@ -15,10 +15,15 @@ export const gainLifeFromItem = (dataOfInteraction) => ({
 	playerHp: dataOfInteraction.updatedPlayerHp
 })
 
-const equipWeapon = (dataOfInteraction) => ({
+export const equipWeapon = (dataOfInteraction) => ({
 	type: 'EQUIP_WEAPON',
-	item: dataOfInteraction.item,
-	playerAttack: dataOfInteraction.playerAttack
+	item: dataOfInteraction.updatedItem,
+	playerAttack: dataOfInteraction.updatedPlayerAttack,
+})
+
+export const gainExp = (exp) => ({
+	type: 'GAIN_EXP',
+	exp
 })
 
 //const removeEntity = (entity) => ({

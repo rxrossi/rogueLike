@@ -17,6 +17,23 @@ const gameReducer = (state = {}, action) => {
                   ...state.enemies.slice(enemyIndex+1)]
 
       }
+		case 'GAIN_EXP': 
+			console.log("GAIN_EXP")
+			return {
+				...state,
+				player: {...state.player, exp: state.player.exp + action.exp}
+			}
+		case 'EQUIP_WEAPON':
+      const weaponId = state.items.findIndex(item => item.id === Number(action.item.id));
+			return {
+				...state,
+				player: {...state.player, weapon: action.item.name, attack: action.playerAttack},
+				items: [
+					...state.items.slice(0, weaponId),
+					action.item,
+					...state.items.slice(weaponId)
+				]
+			}
     case 'GAINED_LIFE_FROM_ITEM':
       const itemIndex = state.items.findIndex(item => item.id === Number(action.item.id));
 

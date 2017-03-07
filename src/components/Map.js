@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { movePlayer, fight, gainLifeFromItem, equipWeapon } from '../actions';
+import { movePlayer, fight, gainLifeFromItem, equipWeapon, gainExp } from '../actions';
 
 class MapComponent extends React.Component {
 
@@ -36,7 +36,7 @@ class MapComponent extends React.Component {
 
 	playerMove(input) {
 		const { map, enemies, player, items } = this.props;
-		const { movePlayer, fight, gainLifeFromItem } = this.props;
+		const { movePlayer, fight, gainLifeFromItem, equipWeapon, gainExp } = this.props;
 
 		let destination = {};
 
@@ -60,9 +60,9 @@ class MapComponent extends React.Component {
 
 		function interatWithEnemy(enemyId) {
 			let enemy = enemies.find(enemy => enemy.id === Number(enemyId));
-			enemy.hp -= player.attack;
+			let updatedEnemyHp = enemy.hp - player.attack;
 			const playerHp = player.hp - enemy.attack;
-			return {updatedEnemy: enemy, updatedPlayerHp: playerHp}
+			return {updatedEnemy: {...enemy, hp: updatedEnemyHp}, updatedPlayerHp: playerHp}
 		}
 
 		function interactWithItem(itemId) {
@@ -89,7 +89,9 @@ class MapComponent extends React.Component {
 				break;
 			case 'enemy':
 					const dataOfFight = interatWithEnemy(destination.entityId);
+					// console.log("enemy hp: ", dataOfFight.updatedEnemy.hp, "exp: ", dataOfFight.updatedEnemy.exp);
 					fight(dataOfFight)
+					if (dataOfFight.updatedEnemy.hp <= 0 ) gainExp(dataOfFight.updatedEnemy.exp) 
 				break;
 			case 'health':
 				player.hp < 1000 //TODO: if the user life is 975, takink a pot will increase life above 1000
@@ -120,6 +122,10 @@ class MapComponent extends React.Component {
 			<div>
 				<div> Player row: {player.row}, Player col: {player.col} </div>
 				<div> Player HP: {player.hp}</div>
+				<div> Weapon: {player.weapon} </div>
+				<div> Attack: {player.attack} </div>
+				<div> lvl: {player.lvl} </div>
+				<div> exp: {player.exp} </div>
 				{
 					map.map( (row, rowKey) => {
 						return (
@@ -152,8 +158,9 @@ const mapDispatchToProps = (dispatch) => ({
 	movePlayer: (destination) => dispatch(movePlayer(destination)),
 	fight: (dataOfFight) => dispatch(fight(dataOfFight)),
 	gainLifeFromItem: (item) => dispatch(gainLifeFromItem(item)),
-	equipWeapon: (data) => dispatch(equipWeapon(data))
-}) //
+	equipWeapon: (data) => dispatch(equipWeapon(data)),
+	gainExp: (data) => dispatch(gainExp(data))
+}) 
 
 MapComponent = connect(mapStateToProps, mapDispatchToProps)(MapComponent)
 

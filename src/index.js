@@ -6,12 +6,10 @@ import './index.css';
 
 //TODO: implement a counter with succesful rooms created, if less than something, redo
 //TODO: sometimes the right rooms goes one col over the space
-//TODO: perfom cleanup on index.js moving things to their files
-//			- need to automate etities generation (items, enemies and healh)
-//			-- it will be necessary to already implement level calculation (map level)
-//TODO: the map component playerMove can be improve a lot
-//			- it is possible that checkDestination can be convertead to a IIFE
-
+//TODO: avoid life going higher than player.maxHp by using health items
+//TODO: add the level up things
+//			- add expToLvlUp and maxHp to player
+// 		  - do the lvl up when certain exp is achieved, change maxHp, set current hp to maxHp, change expToLvlUp, change base_dmg and attack ( save the weapon dmg by doing attack - base_dmg)
 //import functions
 import mapGenerator from './functions/mapGeneration'
 import freePositionsClass from './functions/freePositionsClass'
@@ -36,7 +34,11 @@ import MapComponent from './components/Map.js'
 
 	const player = {
 		hp: 1000,
-		attack: 25
+		base_dmg: 25,
+		attack: 25,
+		weapon: 'none',
+		lvl: 1,
+		exp: 0,
 	}
 
 function setupLevel(level, player) {
@@ -86,13 +88,13 @@ function setupLevel(level, player) {
 	}
 
 	const weapons = [
-		{id:'wp1', type:'weapon', onMap: true, name:'Broom', atack: 30, ...freeSpaceHandler.get()},
-		{id:'wp2', type:'weapon', onMap: true, name:'Broom with sharp knife', atack: 60,  ...freeSpaceHandler.get()},
-		{id:'wp3', type:'weapon', onMap: true, name:'Sword', atack: 100, ...freeSpaceHandler.get()},
-		{id:'wp3', type:'weapon', onMap: true, name:'Fire sword', atack: 150, ...freeSpaceHandler.get()},
+		{id:'wp1', type:'weapon', onMap: true, name:'Broom', attack: 30, ...freeSpaceHandler.get()},
+		{id:'wp2', type:'weapon', onMap: true, name:'Broom with sharp knife', attack: 60,  ...freeSpaceHandler.get()},
+		{id:'wp3', type:'weapon', onMap: true, name:'Sword', attack: 100, ...freeSpaceHandler.get()},
+		{id:'wp3', type:'weapon', onMap: true, name:'Fire sword', attack: 150, ...freeSpaceHandler.get()},
 	];
 
-	const enemies = enemiesCreatorAndPositioner(level, freeSpaceHandler, 5, 200, 70);
+	const enemies = enemiesCreatorAndPositioner(level, freeSpaceHandler, 5, 200, 70, 50);
 	const items = [
 		...healthCreatorAndPositioner(level, freeSpaceHandler, 3, 200),
 		weapons[level]
