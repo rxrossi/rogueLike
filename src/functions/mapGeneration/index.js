@@ -5,7 +5,7 @@ import getChildren from './getChildren.js';
 
 
 //{width and height of map}, {min W and H of rooms}
-const mapGenerator = ( {mapW, mapH}, roomSize ) => {
+const mapGenerator = ( {mapW, mapH}, roomSize, minNumberOfRooms = 10 ) => {
 
 	const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
@@ -23,34 +23,48 @@ const mapGenerator = ( {mapW, mapH}, roomSize ) => {
 		getRandomInt(firstMotherRoom.startCol+roomSize.minW, firstMotherRoom.startCol+roomSize.maxW);
 
   //Place the first room
-	map = fillSpace({...firstMotherRoom}, map, "floor")
-
+	try {
+		map = fillSpace({...firstMotherRoom}, map, "floor")
+	} catch (err) {
+		console.log("could not place the first room: ",err);
+	}
 	let motherRooms = []
 
 	motherRooms.push(firstMotherRoom);
 
-	let i = 10;
-	while (i > 0) {
-		const mother = motherRooms[0]
+	let success = 0;
+	for (let i = 0; i < minNumberOfRooms; i++) {
+		let mother = motherRooms[0]
+		//console.log(mother)
+		if (mother) {
+			success +=1;
+		}
 		const spaceAround = getSpaceAround({...mother}, map, "wall")
 
-		const children = getChildren(spaceAround, mother, {...roomSize});
+		const possibleChildren = getChildren(spaceAround, mother, {...roomSize});
 
-		const sidesAvailable = Object.keys(children);
+		const sidesAvailable = Object.keys(possibleChildren);
+
 		if (sidesAvailable.length > 0) {
 			const sideToDrawChild = sidesAvailable[getRandomInt(0, sidesAvailable.length-1)];
-			map = fillSpace({...children[sideToDrawChild]}, map, "floor");
-			const doorRow = children[sideToDrawChild].door.row;
-			const doorCol = children[sideToDrawChild].door.col;
-
+			map = fillSpace({...possibleChildren[sideToDrawChild]}, map, "floor");
+			const doorRow = possibleChildren[sideToDrawChild].door.row;
+			const doorCol = possibleChildren[sideToDrawChild].door.col;
 			map[doorRow][doorCol] = "floor";
-			motherRooms.push(children[sideToDrawChild]);
+			motherRooms.push(possibleChildren[sideToDrawChild]);
+			motherRooms.shift();
+		} else {
+			console.log('not enough sides available');
+			break;
 		}
-		motherRooms.shift();
-		i -= 1;
 	}
-
-	return map;
+	//console.log("success: ",success)
+	if (success < minNumberOfRooms) {
+		//console.log("not all rooms were created, trying again")
+		return mapGenerator( {mapW, mapH}, roomSize, minNumberOfRooms );
+	} else {
+		return map;
+	}
 }
 
 export default mapGenerator;

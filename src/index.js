@@ -4,8 +4,10 @@ import { createStore } from 'redux';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-//TODO: implement a counter with succesful rooms created, if less than something, redo
-//TODO: sometimes the right rooms goes one col over the space
+//TODO: create map exit to next map (gotta make 4)
+//TODO: put a boss at the last floor
+//TODO: make the player die if health <= 0
+//TODO: create splash notifications on LVL UP, damage taken, damage done, health cured
 
 //import functions
 import mapGenerator from './functions/mapGeneration'
@@ -46,7 +48,7 @@ function setupLevel(level, player) {
 	// 2 - hp: 2000, attack: 50
 	// 3 = hp: 3000, attack: 75
 
-	let map = mapGenerator({mapW, mapH}, roomSize)
+	let map = mapGenerator({mapW, mapH}, roomSize, 15)
 
 	const freeSpaceHandler = new freePositionsClass(map);
 

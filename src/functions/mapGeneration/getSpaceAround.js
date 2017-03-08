@@ -17,22 +17,22 @@ const getSpaceAround = (
 			}
 		}
 		const leftShadow = spacesLeft.slice(startRow,endRow+1)
-		const numberOfColsOfMinorRowOfLeftShador = Math.min(...leftShadow);
+		const numberOfColsOfMinorRowOfLeftShadow = Math.min(...leftShadow);
 
-		const leftStartCol = startCol - numberOfColsOfMinorRowOfLeftShador;
+		const leftStartCol = startCol - numberOfColsOfMinorRowOfLeftShadow;
 		const leftEndCol   = startCol -1;
 
 		//leftStartRow logic
 		let leftStartRow = startRow;
 		for (let row = startRow; row >= 0; row--) {
-			if (spacesLeft[row] < numberOfColsOfMinorRowOfLeftShador) break;
+			if (spacesLeft[row] < numberOfColsOfMinorRowOfLeftShadow) break;
 			leftStartRow = row;
 		}
 
 		//leftEndRow logic
 		let leftEndRow = endRow;
 		for (let row = endRow; row < array.length; row++) {
-			if (spacesLeft[row] < numberOfColsOfMinorRowOfLeftShador) break;
+			if (spacesLeft[row] < numberOfColsOfMinorRowOfLeftShadow) break;
 			leftEndRow = row;
 		}
 
@@ -143,26 +143,26 @@ const getSpaceAround = (
 			startRow: leftStartRow,
 			startCol: leftStartCol,
 			endRow: leftEndRow,
-			endCol: leftEndCol 
+			endCol: leftEndCol
 		},
 		right: {
 			startRow: rightStartRow,
 			startCol: rightStartCol,
 			endRow: rightEndRow,
-			endCol: rightEndCol 
+			endCol: rightEndCol
 		},
-		top: 
+		top:
 		{
 			startRow: topStartRow,
 			startCol: topStartCol,
 			endRow: topEndRow,
-			endCol: topEndCol 
+			endCol: topEndCol
 		},
 		bottom: {
-			startRow:	bottomStartRow, 
+			startRow:	bottomStartRow,
 			startCol: bottomStartCol,
 			endRow: bottomEndRow,
-			endCol: bottomEndCol 
+			endCol: bottomEndCol
 		}
 	}
 }
