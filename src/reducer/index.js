@@ -24,7 +24,18 @@ const gameReducer = (state = {}, action) => {
 			}
 		case 'GAIN_LVL':
 			console.log('LVL UP!')
-			break;
+			return {
+				...state,
+				player: {
+					...state.player,
+					maxHp: state.player.maxHp *2,
+					maxExp: state.player.maxExp *3,
+					lvl: state.player.lvl +1,
+					hp: state.player.maxHp *2,
+					base_dmg: state.player.base_dmg + 25,
+					attack: state.player.attack + 25
+				}
+			};
 		case 'EQUIP_WEAPON':
       const weaponId = state.items.findIndex(item => item.id === Number(action.item.id));
 			return {

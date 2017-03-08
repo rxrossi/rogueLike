@@ -6,8 +6,7 @@ import './index.css';
 
 //TODO: implement a counter with succesful rooms created, if less than something, redo
 //TODO: sometimes the right rooms goes one col over the space
-//TODO: add the level up things
-// 		  - do the lvl up when certain exp is achieved, change maxHp, set current hp to maxHp, change expToLvlUp, change base_dmg and attack ( save the weapon dmg by doing attack - base_dmg)
+
 //import functions
 import mapGenerator from './functions/mapGeneration'
 import freePositionsClass from './functions/freePositionsClass'

@@ -166,7 +166,7 @@ const mapDispatchToProps = (dispatch) => ({
 	gainLifeFromItem: (item) => dispatch(gainLifeFromItem(item)),
 	equipWeapon: (data) => dispatch(equipWeapon(data)),
 	gainExp: (data) => dispatch(gainExp(data)),
-	gainLvl: () => gainLvl()
+	gainLvl: () => dispatch(gainLvl())
 })
 
 MapComponent = connect(mapStateToProps, mapDispatchToProps)(MapComponent)
