@@ -26,13 +26,10 @@ export const gainExp = (exp) => ({
 	exp
 })
 
-export const gainLvl = (data) => ({
+export const gainLvl = () => ({
 	type: 'GAIN_LVL',
 })
 
-//const removeEntity = (entity) => ({
-	//type: 'REMOVE_ENTITY',
-	//row: entity.row,
-	//col: entity.col
-//})
-
+export const nextMapLvl = () => ({
+	type: 'NEXT_MAP_LVL',
+})

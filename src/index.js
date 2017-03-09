@@ -4,27 +4,27 @@ import { createStore } from 'redux';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-//TODO: create map exit to next map (gotta make 4)
 //TODO: put a boss at the last floor
 //TODO: make the player die if health <= 0
 //TODO: create splash notifications on LVL UP, damage taken, damage done, health cured
 
 //import functions
-import mapGenerator from './functions/mapGeneration'
-import freePositionsClass from './functions/freePositionsClass'
+import setupLvl from './functions/setupLvl'
 
 //import reducers
-
 import reducer from './reducer';
 
 //import components
 import MapComponent from './components/Map.js'
 
 // Map generation
-	const mapW = 50;
-	const mapH = 50;
 
-	const roomSize = {
+	const sizeOfMap = {
+		mapH: 50,
+		mapW: 50
+	}
+
+	const sizesOfRooms = {
 		minW: 4,
 		maxW: 8,
 		minH: 4,
@@ -41,81 +41,18 @@ import MapComponent from './components/Map.js'
 		exp: 0,
 		maxExp: 100,
 	}
-
-function setupLevel(level, player) {
 	// player stats based on level
 	// 1 - hp: 1000, attack: 25
 	// 2 - hp: 2000, attack: 50
 	// 3 = hp: 3000, attack: 75
 
-	let map = mapGenerator({mapW, mapH}, roomSize, 15)
-
-	const freeSpaceHandler = new freePositionsClass(map);
-
-	function enemiesCreatorAndPositioner(
-		level, freeSpaceHandler, qty, base_hp, base_attack, base_exp
-		) {
-
-		let hp = base_hp * (level + 1);
-		let attack = base_attack * (level +1);
-		let enemies = [];
-		qty += level;
-		let exp = base_exp * (level + 1);
-		for (let i = 0; i < qty; i++) {
-			enemies.push(
-				{id: i, ...freeSpaceHandler.get(), hp, attack, exp}
-			)
-		}
-		return enemies;
-	}
-
-	//total damage of enemy === health / player attack * enemy attack
-	// lvl 1 - 200 / 25(unarmed) * 100 = 800 or 300 if player armed
-	// lvl 2 - 400 / 50 or 110 * 200 = 1000 if lvl2 + broom, or 500 if with wp2
-	// lvl 3 - 600 / 75 or 195 * 300 = 2400 or 900
-	// lvl 4 - 800 / 100 or 300 * 400 = 3200 or 1200 with weapon
-
-
-	function healthCreatorAndPositioner(level, freeSpaceHandler, qty, base_hp, onMap = true) {
-		let healths = [];
-		let hp = base_hp * (level+1)
-		qty += level;
-		for (let i = 0; i < qty; i++) {
-			healths.push(
-				{id: 'health' + i, type:'health', value: hp, onMap, ...freeSpaceHandler.get()}
-			)
-		}
-		return healths;
-	}
-
-	const weapons = [
-		{id:'wp1', type:'weapon', onMap: true, name:'Broom', attack: 30, ...freeSpaceHandler.get()},
-		{id:'wp2', type:'weapon', onMap: true, name:'Broom with sharp knife', attack: 60,  ...freeSpaceHandler.get()},
-		{id:'wp3', type:'weapon', onMap: true, name:'Sword', attack: 100, ...freeSpaceHandler.get()},
-		{id:'wp3', type:'weapon', onMap: true, name:'Fire sword', attack: 150, ...freeSpaceHandler.get()},
-	];
-
-	const enemies = enemiesCreatorAndPositioner(level, freeSpaceHandler, 5, 200, 70, 50);
-	const items = [
-		...healthCreatorAndPositioner(level, freeSpaceHandler, 3, 200),
-		weapons[level]
-	]
-
-	player = {
-		...player,
-		...freeSpaceHandler.get()
-	}
-
-	return {
-		map,
-		enemies,
-		items,
-		player
-	}
-}
+	const mapLevel = 0;
 
 	const initialState = {
-		...setupLevel(0, player),
+		...setupLvl(mapLevel, player, sizeOfMap, sizesOfRooms),
+		sizeOfMap,
+		sizesOfRooms,
+		mapLevel,
 	}
 
 //store

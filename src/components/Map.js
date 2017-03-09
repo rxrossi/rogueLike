@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { movePlayer, fight, gainLifeFromItem, equipWeapon, gainExp, gainLvl } from '../actions';
+import { movePlayer, fight, gainLifeFromItem, equipWeapon, gainExp, gainLvl, nextMapLvl } from '../actions';
 
 class MapComponent extends React.Component {
 
@@ -36,7 +36,7 @@ class MapComponent extends React.Component {
 
 	playerMove(input) {
 		const { map, enemies, player, items } = this.props;
-		const { movePlayer, fight, gainLifeFromItem, equipWeapon, gainExp, gainLvl } = this.props;
+		const { movePlayer, fight, gainLifeFromItem, equipWeapon, gainExp, gainLvl, nextMapLvl } = this.props;
 
 		let destination = {};
 
@@ -109,6 +109,9 @@ class MapComponent extends React.Component {
 				break;
 			case 'wall':
 				break;
+			case 'exit':
+				nextMapLvl()
+				break;
 			default:
 				console.log("Something blocking the way, unkown entity type: ", destination.type, destination.entityId);
 				break;
@@ -166,7 +169,8 @@ const mapDispatchToProps = (dispatch) => ({
 	gainLifeFromItem: (item) => dispatch(gainLifeFromItem(item)),
 	equipWeapon: (data) => dispatch(equipWeapon(data)),
 	gainExp: (data) => dispatch(gainExp(data)),
-	gainLvl: () => dispatch(gainLvl())
+	gainLvl: () => dispatch(gainLvl()),
+	nextMapLvl: () => dispatch(nextMapLvl()),
 })
 
 MapComponent = connect(mapStateToProps, mapDispatchToProps)(MapComponent)

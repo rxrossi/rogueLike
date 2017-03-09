@@ -1,3 +1,5 @@
+import setupLevel from '../functions/setupLvl'
+
 const gameReducer = (state = {}, action) => {
   switch(action.type) {
     case 'MOVE_PLAYER':
@@ -35,6 +37,18 @@ const gameReducer = (state = {}, action) => {
 					base_dmg: state.player.base_dmg + 25,
 					attack: state.player.attack + 25
 				}
+			};
+		case 'NEXT_MAP_LVL':
+			console.log('hit exit')
+			return {
+				...state,
+				mapLevel: state.mapLevel+1,
+				...setupLevel(
+					state.mapLevel +1,
+					state.player,
+					state.sizeOfMap,
+					state.sizesOfRooms
+				)
 			};
 		case 'EQUIP_WEAPON':
       const weaponId = state.items.findIndex(item => item.id === Number(action.item.id));
