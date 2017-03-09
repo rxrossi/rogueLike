@@ -9,7 +9,7 @@ const gameReducer = (state = {}, action) => {
       }
     case 'FIGHT':
       // console.log(action)
-      const enemyIndex = state.enemies.findIndex(enemy => enemy.id === Number(action.enemy.id));
+      const enemyIndex = state.enemies.findIndex(enemy => enemy.id === action.enemy.id);
       // console.log(enemyIndex);
       return {
         ...state,

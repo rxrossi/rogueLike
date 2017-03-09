@@ -7,12 +7,10 @@ const setupLevel = (mapLevel, player, {mapW, mapH}, sizesOfRooms) => {
 
 	const freeSpaceHandler = new freePositionsClass(map);
 
-	const exitPosition = freeSpaceHandler.get();
+	const aFreeSpace = freeSpaceHandler.get();
 
 	if (mapLevel < 3) {
-		map[exitPosition.row][exitPosition.col] = 'exit';
-	} else {
-		//TODO: put a boos on the map
+		map[aFreeSpace.row][aFreeSpace.col] = 'exit';
 	}
 
 	function enemiesCreatorAndPositioner(
@@ -26,9 +24,14 @@ const setupLevel = (mapLevel, player, {mapW, mapH}, sizesOfRooms) => {
 		let exp = base_exp * (mapLevel + 1);
 		for (let i = 0; i < qty; i++) {
 			enemies.push(
-				{id: i, ...freeSpaceHandler.get(), hp, attack, exp}
+				{id: 'melee'+i, ...freeSpaceHandler.get(), hp, attack, exp}
 			)
-	}
+		}
+		if (mapLevel === 0) {
+			enemies.push(
+				{id: 'boss', hp: hp*4, attack: attack*4, exp: 0, ...freeSpaceHandler.get()}
+			)
+		}
 		return enemies;
 	}
 

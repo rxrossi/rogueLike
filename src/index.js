@@ -4,9 +4,9 @@ import { createStore } from 'redux';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-//TODO: put a boss at the last floor
 //TODO: make the player die if health <= 0
 //TODO: create splash notifications on LVL UP, damage taken, damage done, health cured
+//TODO: the boos is being created on the first floor, change this on setupLvl
 
 //import functions
 import setupLvl from './functions/setupLvl'

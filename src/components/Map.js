@@ -59,10 +59,10 @@ class MapComponent extends React.Component {
     destination.entityId = map[destination.coords.row][destination.coords.col].split(" ")[1]
 
 		function interatWithEnemy(enemyId) {
-			let enemy = enemies.find(enemy => enemy.id === Number(enemyId));
+			let enemy = enemies.find(enemy => enemy.id === enemyId);
 			let updatedEnemyHp = enemy.hp - player.attack;
-			//const playerHp = player.hp - enemy.attack;
 			const updatedPlayer = {...player, hp: player.hp - enemy.attack }
+			if (enemyId === 'boss' && updatedEnemyHp <= 0) console.log('you win');
 			return {updatedEnemy: {...enemy, hp: updatedEnemyHp}, updatedPlayer}
 		}
 
@@ -90,7 +90,6 @@ class MapComponent extends React.Component {
 				break;
 			case 'enemy':
 					const dataOfFight = interatWithEnemy(destination.entityId);
-					// console.log("enemy hp: ", dataOfFight.updatedEnemy.hp, "exp: ", dataOfFight.updatedEnemy.exp);
 					fight(dataOfFight)
 					if (dataOfFight.updatedEnemy.hp <= 0 ) {
 						gainExp(dataOfFight.updatedEnemy.exp)

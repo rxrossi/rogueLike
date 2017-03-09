@@ -41,3 +41,7 @@ body {
 .exit {
 	background: purple;
 }
+
+.boss {
+	background: orange !important;
+}
