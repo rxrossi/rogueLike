@@ -1,0 +1,2 @@
+body{margin:0;padding:0;font-family:sans-serif;background:#111;color:#fff;text-align:center}.wholeScreen{max-height:100vh;overflow:hidden}.viewport{display:inline-block}.row{font-size:0}.enemy,.exit,.floor,.health,.item,.player,.wall,.weapon{display:inline-block;width:2vmin;height:2vmin}.wall{background:#111}.floor{background:#333;border-radius:1px}.player{background:blue}.enemy{background:red}.health{background:green}.weapon{background:#ff0}.exit{background:purple}.boss{background:orange!important}
+/*# sourceMappingURL=main.4122e6c0.css.map*/
