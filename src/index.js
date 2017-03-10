@@ -7,6 +7,7 @@ import './index.css';
 //TODO: make the player die if health <= 0
 //TODO: create splash notifications on LVL UP, damage taken, damage done, health cured
 //TODO: the boos is being created on the first floor, change this on setupLvl
+//TODO: enemy damage must be random
 
 //import functions
 import setupLvl from './functions/setupLvl'

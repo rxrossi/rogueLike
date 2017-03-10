@@ -126,31 +126,49 @@ class MapComponent extends React.Component {
 		items.forEach( item => item.onMap ? map[item.row][item.col] = item.type+" "+item.id : '');
 
 		map[player.row][player.col] = "player";
+
+		let view = map;
+
+		if (false) {
+			const viewDistance = 7;
+
+			view = map.filter( (row, rowKey) =>
+									rowKey > (player.row - viewDistance) && rowKey < (player.row +viewDistance)
+			)
+			view = view.map(
+				row => row.filter( (cell, cellKey) =>
+					cellKey > (player.col - viewDistance) && cellKey < (player.col + viewDistance)
+				)
+			)
+		}
+
 		return (
-			<div>
+			<div className="wholeScreen">
 				<div> Player row: {player.row}, Player col: {player.col} </div>
 				<div> Player HP: {player.hp}/{player.maxHp}</div>
 				<div> Weapon: {player.weapon} </div>
 				<div> Attack: {player.attack} </div>
 				<div> lvl: {player.lvl} </div>
 				<div> exp: {player.exp}/{player.maxExp} </div>
-				{
-					map.map( (row, rowKey) => {
-						return (
-							<div key={rowKey} className="row">
-								{
-									row.map( (cell, cellKey) => {
-										return (
-											<div className={cell} key={rowKey+''+cellKey}>
-												{rowKey} {cellKey}
-											</div>
-										)
-									})
-								}
-							</div>
-						)
-					})
-				}
+				<div className="viewport">
+					{
+						view.map( (row, rowKey) => {
+							return (
+								<div key={rowKey} className="row">
+									{
+										row.map( (cell, cellKey) => {
+											return (
+												<div className={cell} key={rowKey+''+cellKey}>
+													{rowKey} {cellKey}
+												</div>
+											)
+										})
+									}
+								</div>
+							)
+						})
+					}
+				</div>
 			</div>
 		)
 	}

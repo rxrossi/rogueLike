@@ -27,7 +27,7 @@ const setupLevel = (mapLevel, player, {mapW, mapH}, sizesOfRooms) => {
 				{id: 'melee'+i, ...freeSpaceHandler.get(), hp, attack, exp}
 			)
 		}
-		if (mapLevel === 0) {
+		if (mapLevel === 3) {
 			enemies.push(
 				{id: 'boss', hp: hp*4, attack: attack*4, exp: 0, ...freeSpaceHandler.get()}
 			)
