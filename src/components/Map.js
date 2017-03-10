@@ -127,24 +127,36 @@ class MapComponent extends React.Component {
 
 		map[player.row][player.col] = "player";
 
-		let view = map;
+		let viewport = map;
 
-		if (false) {
-			const viewDistance = 7;
+		const darkness = true; //set this in store
 
-			view = map.filter( (row, rowKey) =>
-									rowKey > (player.row - viewDistance) && rowKey < (player.row +viewDistance)
+		let viewDistance;
+
+		darkness ? viewDistance = 7 : viewDistance = 15;
+
+		const mapRowLenght = 50;
+		const mapColLenght = 50;
+
+		const lowerRowFilter = Math.min(player.row - viewDistance, mapRowLenght - viewDistance*2)
+		const higherRowFilter = Math.max (player.row + viewDistance, viewDistance*2) ;
+		//higher = player.row + viewdistance
+		const lowerColFilter = Math.min(player.col - viewDistance, mapColLenght - viewDistance*2)
+		const higherColFilter =	Math.max(player.col + viewDistance, viewDistance*2)
+
+		viewport = map.filter( (row, rowKey) =>
+								rowKey > lowerRowFilter && rowKey < higherRowFilter
+		)
+		viewport = viewport.map(
+			row => row.filter( (cell, cellKey) =>
+				cellKey > lowerColFilter && cellKey < higherColFilter
 			)
-			view = view.map(
-				row => row.filter( (cell, cellKey) =>
-					cellKey > (player.col - viewDistance) && cellKey < (player.col + viewDistance)
-				)
-			)
-		}
+		)
 
 		return (
 			<div className="wholeScreen">
 				<div> Player row: {player.row}, Player col: {player.col} </div>
+				<div> lowerFilter: {lowerColFilter}, higherRowFilter: {higherColFilter} </div>
 				<div> Player HP: {player.hp}/{player.maxHp}</div>
 				<div> Weapon: {player.weapon} </div>
 				<div> Attack: {player.attack} </div>
@@ -152,7 +164,7 @@ class MapComponent extends React.Component {
 				<div> exp: {player.exp}/{player.maxExp} </div>
 				<div className="viewport">
 					{
-						view.map( (row, rowKey) => {
+						viewport.map( (row, rowKey) => {
 							return (
 								<div key={rowKey} className="row">
 									{
