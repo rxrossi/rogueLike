@@ -54,6 +54,7 @@ import MapComponent from './components/Map.js'
 		sizeOfMap,
 		sizesOfRooms,
 		mapLevel,
+		darkness: true,
 	}
 
 //store

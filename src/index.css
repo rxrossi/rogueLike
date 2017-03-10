@@ -7,6 +7,32 @@ body {
 	text-align: center;
 }
 
+.bar {
+	display: inline-block;
+	border: 1px solid red;
+	border-radius: 2px;
+	overflow: hidden;
+	width: 100px;
+	margin: 0 3px;
+
+}
+
+.bar .fill {
+	background: red;
+	height: 0.8em;
+	display: block;
+}
+
+div[data-text]:after {
+	content: attr(data-text);
+	position: absolute;
+	display: block;
+	width: 100px;
+	font-size: 0.7em;
+	padding-top: 0.05em;
+	text-align: center;
+}
+
 .wholeScreen {
 	max-height: 100vh;
 	overflow: hidden
@@ -20,10 +46,10 @@ body {
 	font-size: 0;
 }
 
-.wall, .floor, .enemy, .item, .player, .health, .weapon, .exit {
+.wall, .floor, .enemy, .item, .player, .health, .weapon, .exit, .darkness {
 	display:inline-block;
-	width: 2vmin;
-	height: 2vmin;
+	width: 2.5vmin;
+	height: 2.5vmin;
 }
 
 .wall {
@@ -56,4 +82,7 @@ body {
 
 .boss {
 	background: orange !important;
+}
+.darkness {
+	background: #000;
 }

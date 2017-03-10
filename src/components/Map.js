@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { movePlayer, fight, gainLifeFromItem, equipWeapon, gainExp, gainLvl, nextMapLvl } from '../actions';
+import { movePlayer, fight, gainLifeFromItem, equipWeapon, gainExp, gainLvl, nextMapLvl, toggleDarkness } from '../actions';
+import _ from 'lodash';
 
 class MapComponent extends React.Component {
 
@@ -116,10 +117,10 @@ class MapComponent extends React.Component {
 				break;
 		}
 	}
-
+	playerMove = _.throttle(this.playerMove, 50);
 
 	render() {
-		const { player, map } = this.props;
+		const { player, map, darkness, toggleDarkness } = this.props;
 		const { enemies, items } = this.props;
 
 		enemies.forEach( enemy => enemy.hp > 0 ? map[enemy.row][enemy.col] = "enemy "+enemy.id : '' );
@@ -129,14 +130,26 @@ class MapComponent extends React.Component {
 
 		let viewport = map;
 
-		const darkness = true; //set this in store
+		let viewDistance = 15;
 
-		let viewDistance;
+		if (darkness) {
+			viewport = viewport.map(
+				(row, rowKey) => row.map(
+					(cell, cellKey) => {
+						return (
+							(cellKey < player.col +7) &&
+							(cellKey > player.col -7) &&
+							(rowKey  < player.row +7) &&
+							(rowKey  > player.row -7)
+							? cell : cell="darkness"
+						)
+					}
+				)
+			)
+		}
 
-		darkness ? viewDistance = 7 : viewDistance = 15;
-
-		const mapRowLenght = 50;
-		const mapColLenght = 50;
+		const mapRowLenght = map.length;
+		const mapColLenght = map[0].length
 
 		const lowerRowFilter = Math.min(player.row - viewDistance, mapRowLenght - viewDistance*2)
 		const higherRowFilter = Math.max (player.row + viewDistance, viewDistance*2) ;
@@ -144,7 +157,7 @@ class MapComponent extends React.Component {
 		const lowerColFilter = Math.min(player.col - viewDistance, mapColLenght - viewDistance*2)
 		const higherColFilter =	Math.max(player.col + viewDistance, viewDistance*2)
 
-		viewport = map.filter( (row, rowKey) =>
+		viewport = viewport.filter( (row, rowKey) =>
 								rowKey > lowerRowFilter && rowKey < higherRowFilter
 		)
 		viewport = viewport.map(
@@ -153,15 +166,22 @@ class MapComponent extends React.Component {
 			)
 		)
 
+
 		return (
 			<div className="wholeScreen">
 				<div> Player row: {player.row}, Player col: {player.col} </div>
-				<div> lowerFilter: {lowerColFilter}, higherRowFilter: {higherColFilter} </div>
-				<div> Player HP: {player.hp}/{player.maxHp}</div>
+				<div> PlayerHealth
+					<div className="bar" style={{ width: '100px' }}>
+						<div className='fill'
+								 data-text={`${player.hp}/${player.maxHp}`}
+								style={{ width: Math.floor( player.hp / player.maxHp * 100 ) }} ></div>
+					</div>
+				</div>
 				<div> Weapon: {player.weapon} </div>
 				<div> Attack: {player.attack} </div>
 				<div> lvl: {player.lvl} </div>
 				<div> exp: {player.exp}/{player.maxExp} </div>
+				<div> <button onClick={toggleDarkness}> Darkness {darkness ? 'ON' : 'OFF'}  </button> </div>
 				<div className="viewport">
 					{
 						viewport.map( (row, rowKey) => {
@@ -170,7 +190,8 @@ class MapComponent extends React.Component {
 									{
 										row.map( (cell, cellKey) => {
 											return (
-												<div className={cell} key={rowKey+''+cellKey}>
+												<div className={cell} key={rowKey+''+cellKey}
+												data-text={ cell === "player" ? {cell} : ''} >
 													{rowKey} {cellKey}
 												</div>
 											)
@@ -190,7 +211,8 @@ const mapStateToProps = (state) => ({
   map: state.map,
   player: state.player,
   enemies: state.enemies,
-  items: state.items
+  items: state.items,
+	darkness: state.darkness
 })
 const mapDispatchToProps = (dispatch) => ({
 	movePlayer: (destination) => dispatch(movePlayer(destination)),
@@ -200,6 +222,7 @@ const mapDispatchToProps = (dispatch) => ({
 	gainExp: (data) => dispatch(gainExp(data)),
 	gainLvl: () => dispatch(gainLvl()),
 	nextMapLvl: () => dispatch(nextMapLvl()),
+	toggleDarkness: () => dispatch(toggleDarkness())
 })
 
 MapComponent = connect(mapStateToProps, mapDispatchToProps)(MapComponent)

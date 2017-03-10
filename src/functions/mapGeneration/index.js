@@ -54,7 +54,7 @@ const mapGenerator = ( {mapW, mapH}, roomSize, minNumberOfRooms = 10 ) => {
 			motherRooms.push(possibleChildren[sideToDrawChild]);
 			motherRooms.shift();
 		} else {
-			console.log('not enough sides available');
+			//console.log('not enough sides available');
 			break;
 		}
 	}

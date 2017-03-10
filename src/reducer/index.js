@@ -17,15 +17,18 @@ const gameReducer = (state = {}, action) => {
         enemies: [...state.enemies.slice(0, enemyIndex),
                   action.enemy,
                   ...state.enemies.slice(enemyIndex+1)]
-
       }
+		case 'TOGGLE_DARKNESS':
+			return {
+				...state,
+				darkness: !state.darkness
+			}
 		case 'GAIN_EXP':
 			return {
 				...state,
 				player: {...state.player, exp: state.player.exp + action.exp}
 			}
 		case 'GAIN_LVL':
-			console.log('LVL UP!')
 			return {
 				...state,
 				player: {

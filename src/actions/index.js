@@ -33,3 +33,7 @@ export const gainLvl = () => ({
 export const nextMapLvl = () => ({
 	type: 'NEXT_MAP_LVL',
 })
+
+export const toggleDarkness = () => ({
+	type: 'TOGGLE_DARKNESS'
+})
