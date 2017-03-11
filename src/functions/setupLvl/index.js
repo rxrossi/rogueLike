@@ -24,7 +24,7 @@ const setupLevel = (mapLevel, player, {mapW, mapH}, sizesOfRooms) => {
 		let exp = base_exp * (mapLevel + 1);
 		for (let i = 0; i < qty; i++) {
 			enemies.push(
-				{id: 'melee'+i, ...freeSpaceHandler.get(), hp, attack, exp}
+				{id: 'melee'+i, ...freeSpaceHandler.get(), hp, maxHp: hp, attack, exp}
 			)
 		}
 		if (mapLevel === 3) {

@@ -7,6 +7,20 @@ body {
 	text-align: center;
 }
 
+.enemyHpBar {
+	border: 1px solid purple;
+	width: 2.9vmin;
+	height: 0.3vmin;
+	bottom: 1vmin;
+	left: -0.4vmin;
+	position: relative;
+}
+
+.enemyHpBar .fill {
+	background: red;
+	height: 0.3vmin;
+}
+
 .bar {
 	display: inline-block;
 	border: 1px solid red;

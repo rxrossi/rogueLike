@@ -123,7 +123,7 @@ class MapComponent extends React.Component {
 		const { player, map, darkness, toggleDarkness } = this.props;
 		const { enemies, items } = this.props;
 
-		enemies.forEach( enemy => enemy.hp > 0 ? map[enemy.row][enemy.col] = "enemy "+enemy.id : '' );
+		enemies.forEach( enemy => enemy.hp > 0 ? map[enemy.row][enemy.col] = "enemy "+enemy.id+' '+enemy.hp/enemy.maxHp *100 : '' );
 		items.forEach( item => item.onMap ? map[item.row][item.col] = item.type+" "+item.id : '');
 
 		map[player.row][player.col] = "player";
@@ -166,15 +166,15 @@ class MapComponent extends React.Component {
 			)
 		)
 
-
 		return (
 			<div className="wholeScreen">
 				<div> Player row: {player.row}, Player col: {player.col} </div>
 				<div> PlayerHealth
 					<div className="bar" style={{ width: '100px' }}>
 						<div className='fill'
-								 data-text={`${player.hp}/${player.maxHp}`}
-								style={{ width: Math.floor( player.hp / player.maxHp * 100 ) }} ></div>
+								data-text={`${player.hp}/${player.maxHp}`}
+								style={{ width: Math.floor( player.hp / player.maxHp * 100 ) }} >
+						</div>
 					</div>
 				</div>
 				<div> Weapon: {player.weapon} </div>
@@ -190,9 +190,14 @@ class MapComponent extends React.Component {
 									{
 										row.map( (cell, cellKey) => {
 											return (
-												<div className={cell} key={rowKey+''+cellKey}
-												data-text={ cell === "player" ? {cell} : ''} >
-													{rowKey} {cellKey}
+												<div className={cell} key={rowKey+''+cellKey} >
+													{
+
+														cell.split(" ")[0] === "enemy" ?
+														<div className="enemyHpBar">
+															<div className="fill" style={{ width: cell.split(" ")[2]+'%' }}></div>
+														</div> : ''
+													}
 												</div>
 											)
 										})
