@@ -7,19 +7,24 @@ body {
 	text-align: center;
 }
 
-.enemyHpBar {
-	border: 1px solid purple;
-	width: 2.9vmin;
+.onMapHpBar {
+	border: 1px solid black;
+	width: 3vmin;
 	height: 0.3vmin;
 	bottom: 1vmin;
-	left: -0.4vmin;
+	left: -0.3vmin;
 	position: relative;
 }
 
-.enemyHpBar .fill {
+.onMapHpBar .redFill {
 	background: red;
 	height: 0.3vmin;
 }
+
+.onMapHpBar .greenFill {
+	background: green;
+	height: 0.3vmin;
+}	
 
 .bar {
 	display: inline-block;

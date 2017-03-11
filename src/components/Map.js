@@ -165,6 +165,7 @@ class MapComponent extends React.Component {
 				cellKey > lowerColFilter && cellKey < higherColFilter
 			)
 		)
+		const playerHpPercentage = Math.floor( player.hp / player.maxHp * 100 )+'%';
 
 		return (
 			<div className="wholeScreen">
@@ -173,7 +174,7 @@ class MapComponent extends React.Component {
 					<div className="bar" style={{ width: '100px' }}>
 						<div className='fill'
 								data-text={`${player.hp}/${player.maxHp}`}
-								style={{ width: Math.floor( player.hp / player.maxHp * 100 ) }} >
+								style={{ width: playerHpPercentage  }} >
 						</div>
 					</div>
 				</div>
@@ -189,15 +190,26 @@ class MapComponent extends React.Component {
 								<div key={rowKey} className="row">
 									{
 										row.map( (cell, cellKey) => {
+											//add health bars
+											const entityType = cell.split(" ")[0];
+											let healthBarDiv;
+											if (entityType === "enemy" || entityType === "player") {
+												let healthPercentage;
+												let hpBarFill;
+												if (entityType === "enemy") {
+													healthPercentage = cell.split(" ")[2]+'%';
+													hpBarFill = "redFill";
+												} else {
+													healthPercentage = playerHpPercentage;
+													hpBarFill = "greenFill"
+												}	
+											  healthBarDiv = 	<div className="onMapHpBar">
+																			 		<div className={hpBarFill} style={{ width: healthPercentage }}></div>
+																				</div>;
+											}	
 											return (
 												<div className={cell} key={rowKey+''+cellKey} >
-													{
-
-														cell.split(" ")[0] === "enemy" ?
-														<div className="enemyHpBar">
-															<div className="fill" style={{ width: cell.split(" ")[2]+'%' }}></div>
-														</div> : ''
-													}
+													{ healthBarDiv || '' }	
 												</div>
 											)
 										})
