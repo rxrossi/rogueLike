@@ -5,9 +5,11 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 //TODO: make the player die if health <= 0
-//TODO: create splash notifications on LVL UP, damage taken, damage done, health cured
-//TODO: the boos is being created on the first floor, change this on setupLvl
+//TODO: create splash notifications on LVL UP, damage taken, damage done, health cured and game victory
 //TODO: enemy damage must be random
+//TODO: change door class from floor to door, gotta edit map generation, playerMove on component/map
+//TODO: improve label namming
+//TODO: enemy health percentage should not rely on className, other things should not too
 
 //import functions
 import setupLvl from './functions/setupLvl'

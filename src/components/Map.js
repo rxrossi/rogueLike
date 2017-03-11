@@ -190,25 +190,44 @@ class MapComponent extends React.Component {
 								<div key={rowKey} className="row">
 									{
 										row.map( (cell, cellKey) => {
-											//add health bars
 											const entityType = cell.split(" ")[0];
+
 											let healthBarDiv;
-											if (entityType === "enemy" || entityType === "player") {
-												let healthPercentage;
-												let hpBarFill;
-												if (entityType === "enemy") {
-													healthPercentage = cell.split(" ")[2]+'%';
-													hpBarFill = "redFill";
-												} else {
-													healthPercentage = playerHpPercentage;
-													hpBarFill = "greenFill"
+												if (entityType === "enemy" || entityType === "player") {
+													let healthPercentage;
+													let hpBarFill;
+													if (entityType === "enemy") {
+														healthPercentage = cell.split(" ")[2]+'%';
+														hpBarFill = "redFill";
+													} else {
+														healthPercentage = playerHpPercentage;
+														hpBarFill = "greenFill"
+													}	
+													healthBarDiv = 	<div className="onMapHpBar">
+																						<div className={hpBarFill} style={{ width: healthPercentage }}></div>
+																					</div>;
 												}	
-											  healthBarDiv = 	<div className="onMapHpBar">
-																			 		<div className={hpBarFill} style={{ width: healthPercentage }}></div>
-																				</div>;
-											}	
+
+											let entityLabel;
+												switch (entityType) {
+													case "enemy":
+														entityLabel = "Enemy";
+														break;
+													case "health":
+														entityLabel = "HP Pot";
+														break;
+													case "weapon":
+														entityLabel = "Weapon";
+														break;
+													case "exit":
+														entityLabel = "Exit";
+														break;
+													default:
+														entityLabel = "";
+												}
+
 											return (
-												<div className={cell} key={rowKey+''+cellKey} >
+												<div className={cell} key={rowKey+''+cellKey}  data-label={entityLabel} >
 													{ healthBarDiv || '' }	
 												</div>
 											)

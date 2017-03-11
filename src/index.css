@@ -42,7 +42,7 @@ body {
 	display: block;
 }
 
-div[data-text]:after {
+div[data-text]:after { /*This is being used by player health to show text, need rename*/
 	content: attr(data-text);
 	position: absolute;
 	display: block;
@@ -51,7 +51,21 @@ div[data-text]:after {
 	padding-top: 0.05em;
 	text-align: center;
 }
-
+div[data-label]:before {
+    content: attr(data-label);
+    font-size: 1vmin;
+    position: absolute;
+    color: white;
+    z-index: 2;
+    width: 5vmin;
+   text-align: center;
+    display: block;
+    margin-left: -1.25vmin;
+		text-shadow: 0.1vmin 0.1vmin black;
+		margin-top: 0.7vmin;
+    /* border: 1px solid black; */
+    border-radius: 1vmin;
+}	
 .wholeScreen {
 	max-height: 100vh;
 	overflow: hidden
@@ -69,6 +83,7 @@ div[data-text]:after {
 	display:inline-block;
 	width: 2.5vmin;
 	height: 2.5vmin;
+	position: relative;
 }
 
 .wall {
@@ -93,7 +108,7 @@ div[data-text]:after {
 	background: green;
 }
 .weapon {
-	background: yellow;
+	background: #963;
 }
 .exit {
 	background: purple;
