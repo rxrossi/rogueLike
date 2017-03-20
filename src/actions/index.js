@@ -34,6 +34,19 @@ export const nextMapLvl = () => ({
 	type: 'NEXT_MAP_LVL',
 })
 
+export const playerDead = () => ({
+	type: 'PLAYER_DEAD'
+});
+
 export const toggleDarkness = () => ({
 	type: 'TOGGLE_DARKNESS'
 })
+
+export const sendNotification = (msg) => ({
+	type: 'NOTIFY',
+	msg
+})
+
+export const clearNotification = () => ({
+	type: 'CLEAR_NOTIFICATION'
+});

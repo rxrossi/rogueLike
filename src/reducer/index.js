@@ -42,7 +42,6 @@ const gameReducer = (state = {}, action) => {
 				}
 			};
 		case 'NEXT_MAP_LVL':
-			console.log('hit exit')
 			return {
 				...state,
 				mapLevel: state.mapLevel+1,
@@ -53,6 +52,12 @@ const gameReducer = (state = {}, action) => {
 					state.sizesOfRooms
 				)
 			};
+		case 'PLAYER_DEAD':
+			console.log('player dead');
+			return {
+				...state,
+				msg: 'You are dead'
+			}
 		case 'EQUIP_WEAPON':
       const weaponId = state.items.findIndex(item => item.id === Number(action.item.id));
 			return {
@@ -80,6 +85,16 @@ const gameReducer = (state = {}, action) => {
           ...state.items.slice(itemIndex)
         ]
       }
+		case 'NOTIFY':
+			return {
+				...state,
+				msg: action.msg
+			}
+		case 'CLEAR_NOTIFICATION':
+			return {
+				...state,
+				msg: ''
+			}
     default:
       return state;
   }

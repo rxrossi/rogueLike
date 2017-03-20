@@ -4,7 +4,6 @@ import { createStore } from 'redux';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-//TODO: make the player die if health <= 0
 //TODO: create splash notifications on LVL UP, damage taken, damage done, health cured and game victory
 //TODO: enemy damage must be random
 //TODO: change door class from floor to door, gotta edit map generation, playerMove on component/map

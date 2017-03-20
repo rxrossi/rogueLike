@@ -24,7 +24,7 @@ body {
 .onMapHpBar .greenFill {
 	background: green;
 	height: 0.3vmin;
-}	
+}
 
 .bar {
 	display: inline-block;
@@ -65,7 +65,7 @@ div[data-label]:before {
 		margin-top: 0.7vmin;
     /* border: 1px solid black; */
     border-radius: 1vmin;
-}	
+}
 .wholeScreen {
 	max-height: 100vh;
 	overflow: hidden
@@ -117,6 +117,23 @@ div[data-label]:before {
 .boss {
 	background: orange !important;
 }
+
 .darkness {
-	background: #000;
+	background: #111;
+}
+
+.notification {
+	position: absolute;
+	background: purple;
+	top: 25vmin;
+	left: 25vmin;
+	padding: 20vmin;
+	animation-name: fade;
+	animation-duration: 4s;
+}
+
+@keyframes fade {
+	25% {opacity: 0.75;}
+	50% {opacity: 0.50;}
+	100% {opacity: 0}
 }

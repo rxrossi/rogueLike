@@ -1,0 +1,12 @@
+.dialog {
+	background: #400;
+}
+
+.hidden {
+	display: none;
+}
+
+p {
+	padding: 5px;
+}
+

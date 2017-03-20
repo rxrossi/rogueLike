@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { movePlayer, fight, gainLifeFromItem, equipWeapon, gainExp, gainLvl, nextMapLvl, toggleDarkness } from '../actions';
+import { movePlayer, fight, gainLifeFromItem, equipWeapon, gainExp, gainLvl, nextMapLvl, toggleDarkness, sendNotification, playerDead } from '../actions';
+import Dialog from './Dialog';
 import _ from 'lodash';
 
 class MapComponent extends React.Component {
@@ -14,7 +15,7 @@ class MapComponent extends React.Component {
 
 	componentDidMount() {
 		window.addEventListener("keydown", (e) => {
-			// console.log(e.keyCode);
+			if (this.props.player.hp <= 0) return;
 			switch (e.keyCode) {
 				case 37:
 					this.playerMove("LEFT")
@@ -37,7 +38,7 @@ class MapComponent extends React.Component {
 
 	playerMove(input) {
 		const { map, enemies, player, items } = this.props;
-		const { movePlayer, fight, gainLifeFromItem, equipWeapon, gainExp, gainLvl, nextMapLvl } = this.props;
+		const { movePlayer, fight, gainLifeFromItem, equipWeapon, gainExp, gainLvl, nextMapLvl, playerDead, sendNotification } = this.props;
 
 		let destination = {};
 
@@ -62,8 +63,8 @@ class MapComponent extends React.Component {
 		function interatWithEnemy(enemyId) {
 			let enemy = enemies.find(enemy => enemy.id === enemyId);
 			let updatedEnemyHp = enemy.hp - player.attack;
-			const updatedPlayer = {...player, hp: player.hp - enemy.attack }
-			if (enemyId === 'boss' && updatedEnemyHp <= 0) console.log('you win');
+			const updatedPlayer = {...player, hp: Math.max(player.hp - enemy.attack, 0)}
+			if (enemyId === 'boss' && updatedEnemyHp <= 0) sendNotification('You won!!!');
 			return {updatedEnemy: {...enemy, hp: updatedEnemyHp}, updatedPlayer}
 		}
 
@@ -91,6 +92,9 @@ class MapComponent extends React.Component {
 				break;
 			case 'enemy':
 					const dataOfFight = interatWithEnemy(destination.entityId);
+					if (dataOfFight.updatedPlayer.hp <= 0) {
+						playerDead();
+					}
 					fight(dataOfFight)
 					if (dataOfFight.updatedEnemy.hp <= 0 ) {
 						gainExp(dataOfFight.updatedEnemy.exp)
@@ -120,8 +124,8 @@ class MapComponent extends React.Component {
 	playerMove = _.throttle(this.playerMove, 50);
 
 	render() {
-		const { player, map, darkness, toggleDarkness } = this.props;
-		const { enemies, items } = this.props;
+		const { player, map, darkness, toggleDarkness, sendNotification } = this.props;
+		const { enemies, items, msg } = this.props;
 
 		enemies.forEach( enemy => enemy.hp > 0 ? map[enemy.row][enemy.col] = "enemy "+enemy.id+' '+enemy.hp/enemy.maxHp *100 : '' );
 		items.forEach( item => item.onMap ? map[item.row][item.col] = item.type+" "+item.id : '');
@@ -183,6 +187,7 @@ class MapComponent extends React.Component {
 				<div> lvl: {player.lvl} </div>
 				<div> exp: {player.exp}/{player.maxExp} </div>
 				<div> <button onClick={toggleDarkness}> Darkness {darkness ? 'ON' : 'OFF'}  </button> </div>
+				<div> <button onClick={ () => sendNotification("test message")}> Send a test message	</button> </div>
 				<div className="viewport">
 					{
 						viewport.map( (row, rowKey) => {
@@ -202,11 +207,11 @@ class MapComponent extends React.Component {
 													} else {
 														healthPercentage = playerHpPercentage;
 														hpBarFill = "greenFill"
-													}	
+													}
 													healthBarDiv = 	<div className="onMapHpBar">
 																						<div className={hpBarFill} style={{ width: healthPercentage }}></div>
 																					</div>;
-												}	
+												}
 
 											let entityLabel;
 												switch (entityType) {
@@ -228,7 +233,7 @@ class MapComponent extends React.Component {
 
 											return (
 												<div className={cell} key={rowKey+''+cellKey}  data-label={entityLabel} >
-													{ healthBarDiv || '' }	
+													{ healthBarDiv || '' }
 												</div>
 											)
 										})
@@ -238,6 +243,7 @@ class MapComponent extends React.Component {
 						})
 					}
 				</div>
+				<Dialog msg={msg} />
 			</div>
 		)
 	}
@@ -248,7 +254,8 @@ const mapStateToProps = (state) => ({
   player: state.player,
   enemies: state.enemies,
   items: state.items,
-	darkness: state.darkness
+	darkness: state.darkness,
+	msg: state.msg
 })
 const mapDispatchToProps = (dispatch) => ({
 	movePlayer: (destination) => dispatch(movePlayer(destination)),
@@ -258,7 +265,9 @@ const mapDispatchToProps = (dispatch) => ({
 	gainExp: (data) => dispatch(gainExp(data)),
 	gainLvl: () => dispatch(gainLvl()),
 	nextMapLvl: () => dispatch(nextMapLvl()),
-	toggleDarkness: () => dispatch(toggleDarkness())
+	toggleDarkness: () => dispatch(toggleDarkness()),
+	sendNotification: (msg) => dispatch(sendNotification(msg)),
+	playerDead: () => dispatch(playerDead())
 })
 
 MapComponent = connect(mapStateToProps, mapDispatchToProps)(MapComponent)
