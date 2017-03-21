@@ -63,7 +63,6 @@ class Game extends React.Component {
 
 		return (
 			<div className="wholeScreen">
-				<div> Player row: {player.row}, Player col: {player.col} </div>
 				<div> PlayerHealth
 					<div className="bar" style={{ width: '100px' }}>
 						<div className='fill'

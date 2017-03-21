@@ -10,15 +10,13 @@ export default ({ playerHpPercentage, map, player, darkness}) => {
 	if (darkness) {
 		viewport = viewport.map(
 			(row, rowKey) => row.map(
-				(cell, cellKey) => {
-					return (
+				(cell, cellKey) => (
 						(cellKey < player.col +lightDistance) &&
 						(cellKey > player.col -lightDistance) &&
 						(rowKey  < player.row +lightDistance) &&
 						(rowKey  > player.row -lightDistance)
 						? cell : cell="darkness"
-					)
-				}
+				)
 			)
 		)
 	}

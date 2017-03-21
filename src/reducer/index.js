@@ -53,7 +53,6 @@ const gameReducer = (state = {}, action) => {
 				)
 			};
 		case 'PLAYER_DEAD':
-			console.log('player dead');
 			return {
 				...state,
 				msg: 'You are dead'
@@ -62,7 +61,12 @@ const gameReducer = (state = {}, action) => {
       const weaponId = state.items.findIndex(item => item.id === Number(action.item.id));
 			return {
 				...state,
-				player: {...state.player, weapon: action.item.name, attack: action.playerAttack},
+				player: {...state.player,
+								weapon: action.item.name,
+								attack: action.playerAttack,
+								row: action.item.row,
+								col: action.item.col
+				},
 				items: [
 					...state.items.slice(0, weaponId),
 					action.item,
@@ -93,7 +97,7 @@ const gameReducer = (state = {}, action) => {
 		case 'CLEAR_NOTIFICATION':
 			return {
 				...state,
-				msg: ''
+				dialogData: {msg: ''}
 			}
     default:
       return state;
