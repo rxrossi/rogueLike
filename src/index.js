@@ -5,6 +5,9 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 //TODO: create splash notifications on LVL UP, damage taken, damage done, health cured and game victory
+//TODO: pick item should, on reducer, move player to item location
+//TODO: 'You died' dialog should have a button to restart
+//			- dialog could have something like msg: string, buttons: [ { buttonName, action}, ]
 //TODO: enemy damage must be random
 //TODO: change door class from floor to door, gotta edit map generation, playerMove on component/map
 //TODO: improve label namming
@@ -17,7 +20,9 @@ import setupLvl from './functions/setupLvl'
 import reducer from './reducer';
 
 //import components
-import MapComponent from './components/Map.js'
+//import MapComponent from './components/Map.js'
+
+import Game from './containers/Game';
 
 // Map generation
 
@@ -63,7 +68,7 @@ import MapComponent from './components/Map.js'
 
 ReactDOM.render(
   <Provider store={store}>
-    <MapComponent />
+    <Game />
   </Provider>,
   document.getElementById('root')
 );
