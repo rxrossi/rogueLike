@@ -1,5 +1,7 @@
 import setupLevel from '../functions/setupLvl'
 
+import { mapLevel, player, sizeOfMap, sizesOfRooms, dialogData } from '../startingData';
+
 const gameReducer = (state = {}, action) => {
   switch(action.type) {
     case 'MOVE_PLAYER':
@@ -52,10 +54,17 @@ const gameReducer = (state = {}, action) => {
 					state.sizesOfRooms
 				)
 			};
+		case 'RESTART':
+			return {
+				...state,
+				...setupLevel(mapLevel, player, sizeOfMap, sizesOfRooms),
+				dialogData,
+				mapLevel
+			}
 		case 'PLAYER_DEAD':
 			return {
 				...state,
-				msg: 'You are dead'
+				dialogData: { msg: action.msg, buttons: action.buttons }
 			}
 		case 'EQUIP_WEAPON':
       const weaponId = state.items.findIndex(item => item.id === Number(action.item.id));
@@ -92,7 +101,7 @@ const gameReducer = (state = {}, action) => {
 		case 'NOTIFY':
 			return {
 				...state,
-				msg: action.msg
+				dialogData: { msg: action.msg, buttons: action.buttons }
 			}
 		case 'CLEAR_NOTIFICATION':
 			return {

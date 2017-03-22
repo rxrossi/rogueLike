@@ -1,3 +1,5 @@
+import { clearNotification, restartGame } from '../../actions';
+
 export default ({ input, map, enemies, player, items,
 								movePlayer, playerDead, gainLvl, gainExp,
 								gainLifeFromItem, sendNotification,
@@ -29,10 +31,11 @@ export default ({ input, map, enemies, player, items,
 			break;
 		case 'enemy':
 				const dataOfFight = interatWithEnemy(destination.entityId);
+				fight(dataOfFight)
 				if (dataOfFight.updatedPlayer.hp <= 0) {
 					playerDead();
+					break;
 				}
-				fight(dataOfFight)
 				if (dataOfFight.updatedEnemy.hp <= 0 ) {
 					gainExp(dataOfFight.updatedEnemy.exp)
 					if (player.exp + dataOfFight.updatedEnemy.exp >= player.maxExp) {
@@ -64,7 +67,13 @@ export default ({ input, map, enemies, player, items,
 		const updatedEnemyHp = enemy.hp - playerDmg;
 		const enemyDmg = Math.floor(getRandomNumber(0.9, 1.2) * enemy.attack);
 		const updatedPlayer = {...player, hp: Math.max(player.hp - enemyDmg, 0)}
-		if (enemyId === 'boss' && updatedEnemyHp <= 0) sendNotification('You won!!!');
+		if (enemyId === 'boss' && updatedEnemyHp <= 0) {
+			sendNotification({msg: 'You won',
+				buttons: [ { label: 'OK', action: clearNotification },
+									 { label: 'Start again', action: restartGame }
+				]}
+			);
+		}
 		return {updatedEnemy: {...enemy, hp: updatedEnemyHp}, updatedPlayer}
 	}
 

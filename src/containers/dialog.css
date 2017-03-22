@@ -1,5 +1,21 @@
 .dialog {
 	background: #400;
+	position: relative;
+	bottom: 40vh;
+	width: 50%;
+	left: 25%;
+	z-index: 4;
+	border-radius: 5px;
+	padding: 5px;
+}
+
+.dialog button {
+	background: #A11;
+	color: #fff;
+	padding: 5px 15px;
+	border: 0;
+	border-radius: 2px;
+	margin: 10px;
 }
 
 .hidden {

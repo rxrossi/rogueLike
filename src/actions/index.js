@@ -34,17 +34,24 @@ export const nextMapLvl = () => ({
 	type: 'NEXT_MAP_LVL',
 })
 
+export const restartGame = () => ({
+	type: 'RESTART'
+});
+
 export const playerDead = () => ({
-	type: 'PLAYER_DEAD'
+	type: 'PLAYER_DEAD',
+	msg: 'You are dead',
+	buttons: [ {label: 'Retry', action: restartGame } ]
 });
 
 export const toggleDarkness = () => ({
 	type: 'TOGGLE_DARKNESS'
 })
 
-export const sendNotification = (msg) => ({
+export const sendNotification = ({msg, buttons}) => ({
 	type: 'NOTIFY',
-	msg
+	msg,
+	buttons
 })
 
 export const clearNotification = () => ({
