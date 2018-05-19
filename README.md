@@ -1,2 +1,2 @@
 # Roguelike dungeon crawler game 
-A FCC excise, work in progress, a version of the current work is [live](https://rxrossi.github.io/rogueLike/)
+A FCC excise, a version of the current work is [live](https://rxrossi.github.io/rogueLike/) to move the character use the keyboard arrows
